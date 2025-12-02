@@ -1,0 +1,824 @@
+================================================================================
+DNA PATTERN MATCHING ALGORITHMS - COMPREHENSIVE ANALYSIS REPORT
+================================================================================
+Total Patterns: 119 | Categories: 5 | Algorithm Runs: 679
+Generated: 2025-12-02 06:01:41
+
+OVERALL PERFORMANCE RANKING
+==================================================
+Algorithm    Mean(ms)   Median(ms)   Min(ms)    Max(ms)      Std(ms)    Memory(kB)   Patterns   Total(ms)*  
+-----------------------------------------------------------------------------------------------------------------------
+suffix_tree  0.5527     0.1115       0.0207     10.4867      1.6088     0.8          114        35.7945     
+regex        2.5588     2.2037       1.5870     14.0795      1.7448     13.2         119        262.2413    
+rabin_karp   148.2237   147.7909     146.2701   171.1943     2.4909     0.4          119        17587.1141  
+boyer_moore  184.9675   175.1549     12.0100    436.0205     96.5301    7.6          119        20843.4350  
+kmp          191.7858   191.6705     186.4815   200.3020     2.2935     3.0          119        22808.7845  
+naive        667.8601   665.4823     650.6227   735.3670     13.7327    2.2          89         59227.9240  
+
+* Total Time = (Median × Patterns) + Preprocessing Time
+
+SPEEDUP COMPARISON vs REGEX (Total Time)
+=========================================
+Algorithm       Speedup         Description                   
+------------------------------------------------------------
+suffix_tree     7.3263x faster  Significantly faster          
+regex           1.00x           Baseline (C-optimized)        
+rabin_karp      67.0646x slower Much slower                   
+boyer_moore     79.4819x slower Much slower                   
+kmp             86.9763x slower Much slower                   
+naive           225.8528x slower Much slower                   
+
+SPEEDUP COMPARISON vs REGEX (Runtime Only)
+============================================
+Algorithm       Speedup         Description                   
+------------------------------------------------------------
+suffix_tree     4.6297x faster  Significantly faster          
+regex           1.00x           Baseline (C-optimized)        
+rabin_karp      57.9268x slower Much slower                   
+boyer_moore     72.2865x slower Much slower                   
+kmp             74.9511x slower Much slower                   
+naive           261.0040x slower Much slower                   
+
+PATTERN SIZE BREAKDOWN
+==============================
+Size       Length Range    Count    Avg Time(ms)
+---------------------------------------------
+small      5-10bp         120      222.4105    
+medium     20-50bp         348      196.0870    
+large      53-197bp         131      145.6895    
+vlarge     214-2943bp         80       103.3304    
+
+CATEGORY: AVERAGE
+=================
+Algorithm    Mean(ms)   Std(ms)    Preproc(ms)  Memory(kB)   Patterns   Total(ms)*  
+----------------------------------------------------------------------------------------
+suffix_tree  1.1425     2.3097     23.0882      1.9          50         80.2135     
+regex        3.0249     2.4697     0.0000       22.1         55         166.3676    
+rabin_karp   148.1253   1.6010     0.0000       0.6          55         8146.8940   
+kmp          191.9722   2.0664     0.0000       5.4          55         10558.4731  
+boyer_moore  228.7129   91.9248    0.0000       13.6         55         12579.2109  
+naive        670.9306   14.6596    0.0000       4.6          40         26837.2257  
+
+* Total Time = (Mean × Patterns) + Preprocessing Time
+
+PER-PATTERN RESULTS:
+Pattern              Algorithm    Time(ms)   Matches  Memory(kB)
+----------------------------------------------------------------------
+avg_long_0           suffix_tree  0.2275     1        1.5       
+avg_long_0           regex        2.6345     1        32.6      
+avg_long_0           rabin_karp   153.4935   1        0.6       
+avg_long_0           kmp          192.4669   1        3.7       
+avg_long_0           boyer_moore  214.3027   1        14.0      
+avg_long_1           suffix_tree  0.2615     1        0.2       
+avg_long_1           regex        2.7041     1        19.4      
+avg_long_1           rabin_karp   147.6047   1        0.7       
+avg_long_1           kmp          189.7531   1        2.6       
+avg_long_1           boyer_moore  225.0495   1        13.2      
+avg_long_2           suffix_tree  0.2273     1        0.2       
+avg_long_2           regex        2.3229     1        16.2      
+avg_long_2           rabin_karp   147.6868   1        0.6       
+avg_long_2           boyer_moore  151.3457   1        11.9      
+avg_long_2           kmp          189.7861   1        2.3       
+avg_long_3           suffix_tree  0.1171     1        0.1       
+avg_long_3           regex        2.4283     1        11.9      
+avg_long_3           boyer_moore  116.9483   1        3.2       
+avg_long_3           rabin_karp   148.2626   1        0.5       
+avg_long_3           kmp          193.9032   1        1.7       
+avg_long_4           suffix_tree  0.1201     1        0.1       
+avg_long_4           regex        2.1086     1        10.2      
+avg_long_4           boyer_moore  108.6860   1        2.7       
+avg_long_4           rabin_karp   148.6918   1        0.4       
+avg_long_4           kmp          192.3507   1        1.5       
+avg_long_5           suffix_tree  0.2470     1        0.2       
+avg_long_5           regex        2.6909     1        17.0      
+avg_long_5           boyer_moore  142.5791   1        12.6      
+avg_long_5           rabin_karp   148.5638   1        0.6       
+avg_long_5           kmp          195.2148   1        2.5       
+avg_long_6           suffix_tree  0.1249     1        0.1       
+avg_long_6           regex        2.2992     1        11.4      
+avg_long_6           rabin_karp   148.1556   1        0.4       
+avg_long_6           boyer_moore  167.1539   1        3.1       
+avg_long_6           kmp          189.7653   1        1.7       
+avg_long_7           suffix_tree  0.1308     1        0.1       
+avg_long_7           regex        2.3205     1        13.1      
+avg_long_7           boyer_moore  116.3019   1        3.5       
+avg_long_7           rabin_karp   148.5415   1        0.5       
+avg_long_7           kmp          189.8157   1        1.9       
+avg_long_8           suffix_tree  0.1281     1        0.1       
+avg_long_8           regex        2.4172     1        12.9      
+avg_long_8           boyer_moore  103.4582   1        3.5       
+avg_long_8           rabin_karp   147.7961   1        0.5       
+avg_long_8           kmp          191.3231   1        1.9       
+avg_long_9           suffix_tree  0.2449     1        0.2       
+avg_long_9           regex        2.8724     1        17.8      
+avg_long_9           boyer_moore  137.6395   1        13.2      
+avg_long_9           rabin_karp   147.9300   1        0.7       
+avg_long_9           kmp          193.5677   1        2.6       
+avg_medium_0         suffix_tree  0.0546     1        0.1       
+avg_medium_0         regex        2.2167     1        2.4       
+avg_medium_0         rabin_karp   147.5433   1        0.1       
+avg_medium_0         boyer_moore  149.2897   1        0.6       
+avg_medium_0         kmp          194.7859   1        0.4       
+avg_medium_0         naive        666.7431   1        1.1       
+avg_medium_1         suffix_tree  0.0635     1        0.1       
+avg_medium_1         regex        2.1540     1        3.4       
+avg_medium_1         rabin_karp   147.3680   1        0.2       
+avg_medium_1         kmp          192.4915   1        0.6       
+avg_medium_1         boyer_moore  210.6442   1        0.9       
+avg_medium_1         naive        666.6330   1        0.2       
+avg_medium_10        suffix_tree  0.0540     1        0.1       
+avg_medium_10        regex        1.9030     1        2.3       
+avg_medium_10        rabin_karp   147.6147   1        0.1       
+avg_medium_10        boyer_moore  167.1218   1        0.6       
+avg_medium_10        kmp          190.3159   1        0.4       
+avg_medium_10        naive        653.8784   1        0.2       
+avg_medium_11        suffix_tree  0.0489     1        0.1       
+avg_medium_11        regex        1.9649     1        3.5       
+avg_medium_11        rabin_karp   146.6342   1        0.2       
+avg_medium_11        boyer_moore  165.9277   1        0.9       
+avg_medium_11        kmp          192.8387   1        0.6       
+avg_medium_11        naive        666.3421   1        0.2       
+avg_medium_12        suffix_tree  0.0604     1        0.1       
+avg_medium_12        regex        2.3185     1        3.1       
+avg_medium_12        boyer_moore  136.4264   1        0.8       
+avg_medium_12        rabin_karp   147.6256   1        0.1       
+avg_medium_12        kmp          193.6822   1        0.5       
+avg_medium_12        naive        665.7568   1        0.2       
+avg_medium_13        suffix_tree  0.0610     1        0.1       
+avg_medium_13        regex        2.0398     1        3.2       
+avg_medium_13        rabin_karp   147.3735   1        0.1       
+avg_medium_13        kmp          190.7787   1        0.5       
+avg_medium_13        boyer_moore  204.7298   1        0.8       
+avg_medium_13        naive        669.0023   1        0.2       
+avg_medium_14        suffix_tree  0.0612     1        0.1       
+avg_medium_14        regex        2.2078     1        2.9       
+avg_medium_14        rabin_karp   146.5548   1        0.1       
+avg_medium_14        kmp          193.9567   1        0.5       
+avg_medium_14        boyer_moore  274.6961   1        0.8       
+avg_medium_14        naive        667.8057   1        0.2       
+avg_medium_15        suffix_tree  0.1155     1        0.1       
+avg_medium_15        regex        2.1308     1        2.5       
+avg_medium_15        rabin_karp   147.6635   1        0.1       
+avg_medium_15        kmp          196.4451   1        0.5       
+avg_medium_15        boyer_moore  277.3063   1        0.7       
+avg_medium_15        naive        664.7730   1        0.2       
+avg_medium_16        suffix_tree  0.0484     1        0.1       
+avg_medium_16        regex        2.0191     1        2.5       
+avg_medium_16        rabin_karp   147.8116   1        0.1       
+avg_medium_16        boyer_moore  175.1549   1        0.7       
+avg_medium_16        kmp          189.7836   1        0.5       
+avg_medium_16        naive        657.2467   1        0.2       
+avg_medium_17        suffix_tree  0.0607     1        0.1       
+avg_medium_17        regex        1.9308     1        3.2       
+avg_medium_17        rabin_karp   148.5568   1        0.1       
+avg_medium_17        kmp          193.0719   1        0.5       
+avg_medium_17        boyer_moore  308.6346   1        0.8       
+avg_medium_17        naive        673.6343   1        0.2       
+avg_medium_18        suffix_tree  0.0639     1        0.1       
+avg_medium_18        regex        2.4871     1        2.5       
+avg_medium_18        rabin_karp   147.8976   1        0.1       
+avg_medium_18        kmp          190.6942   1        0.5       
+avg_medium_18        boyer_moore  291.5149   1        0.6       
+avg_medium_18        naive        673.4076   1        0.2       
+avg_medium_19        suffix_tree  0.1140     1        0.1       
+avg_medium_19        regex        2.2697     1        2.7       
+avg_medium_19        rabin_karp   147.9755   1        0.1       
+avg_medium_19        kmp          191.2505   1        0.5       
+avg_medium_19        boyer_moore  220.3558   1        0.7       
+avg_medium_19        naive        735.3670   1        0.2       
+avg_medium_2         suffix_tree  0.0895     1        0.1       
+avg_medium_2         regex        2.1585     1        3.8       
+avg_medium_2         boyer_moore  137.2718   1        1.0       
+avg_medium_2         rabin_karp   148.7019   1        0.2       
+avg_medium_2         kmp          187.8957   1        0.6       
+avg_medium_2         naive        652.6851   1        0.2       
+avg_medium_3         suffix_tree  0.1176     1        0.1       
+avg_medium_3         regex        2.3679     1        2.7       
+avg_medium_3         rabin_karp   147.5203   1        0.1       
+avg_medium_3         kmp          193.6031   1        0.5       
+avg_medium_3         boyer_moore  268.8155   1        0.7       
+avg_medium_3         naive        664.1335   1        0.2       
+avg_medium_4         suffix_tree  0.2083     1        0.1       
+avg_medium_4         regex        2.4409     1        3.8       
+avg_medium_4         boyer_moore  127.1287   1        1.0       
+avg_medium_4         rabin_karp   147.6835   1        0.2       
+avg_medium_4         kmp          194.2071   1        0.6       
+avg_medium_4         naive        660.5431   1        0.2       
+avg_medium_5         suffix_tree  0.2096     1        0.1       
+avg_medium_5         regex        2.3633     1        3.9       
+avg_medium_5         rabin_karp   157.1520   1        0.2       
+avg_medium_5         kmp          190.7723   1        0.6       
+avg_medium_5         boyer_moore  226.9264   1        1.0       
+avg_medium_5         naive        668.0382   1        0.2       
+avg_medium_6         suffix_tree  0.2491     1        0.1       
+avg_medium_6         regex        1.9758     1        3.5       
+avg_medium_6         rabin_karp   147.2152   1        0.2       
+avg_medium_6         boyer_moore  173.9676   1        0.9       
+avg_medium_6         kmp          189.5863   1        0.6       
+avg_medium_6         naive        680.9714   1        0.2       
+avg_medium_7         suffix_tree  0.1677     1        0.1       
+avg_medium_7         regex        2.3862     1        2.4       
+avg_medium_7         rabin_karp   148.5322   1        0.1       
+avg_medium_7         kmp          195.1723   1        0.4       
+avg_medium_7         boyer_moore  231.5277   1        0.6       
+avg_medium_7         naive        658.9685   1        0.2       
+avg_medium_8         suffix_tree  0.1387     1        0.1       
+avg_medium_8         regex        2.1721     1        3.2       
+avg_medium_8         rabin_karp   148.6902   1        0.1       
+avg_medium_8         kmp          189.1152   1        0.5       
+avg_medium_8         boyer_moore  241.8103   1        0.8       
+avg_medium_8         naive        659.8048   1        0.2       
+avg_medium_9         suffix_tree  0.2411     1        0.1       
+avg_medium_9         regex        2.2609     1        4.0       
+avg_medium_9         rabin_karp   148.1462   1        0.2       
+avg_medium_9         boyer_moore  177.4465   1        1.1       
+avg_medium_9         kmp          192.7722   1        0.7       
+avg_medium_9         naive        663.5137   1        0.2       
+avg_short_0          suffix_tree  1.5455     111      4.6       
+avg_short_0          regex        2.2457     111      5.0       
+avg_short_0          rabin_karp   147.0446   111      0.1       
+avg_short_0          kmp          190.1487   111      4.2       
+avg_short_0          boyer_moore  366.1018   111      4.2       
+avg_short_0          naive        677.8361   111      4.2       
+avg_short_1          regex        2.6210     709      26.3      
+avg_short_1          suffix_tree  9.2118     709      12.7      
+avg_short_1          rabin_karp   148.9584   709      0.1       
+avg_short_1          kmp          191.0755   709      25.5      
+avg_short_1          boyer_moore  344.9834   709      25.4      
+avg_short_1          naive        682.4729   709      25.5      
+avg_short_10         suffix_tree  0.2025     3        0.2       
+avg_short_10         regex        2.2638     3        1.2       
+avg_short_10         rabin_karp   147.6172   3        0.1       
+avg_short_10         boyer_moore  157.5796   3        0.3       
+avg_short_10         kmp          190.5668   3        0.3       
+avg_short_10         naive        660.2250   3        0.3       
+avg_short_11         suffix_tree  0.6376     63       1.1       
+avg_short_11         regex        2.0659     63       3.2       
+avg_short_11         rabin_karp   148.2018   63       0.1       
+avg_short_11         kmp          188.2299   63       2.4       
+avg_short_11         boyer_moore  372.8646   63       2.4       
+avg_short_11         naive        654.4970   63       2.4       
+avg_short_12         regex        2.7934     911      33.5      
+avg_short_12         suffix_tree  10.4867    917      15.3      
+avg_short_12         rabin_karp   148.2838   917      0.1       
+avg_short_12         kmp          191.6940   917      32.8      
+avg_short_12         boyer_moore  389.0411   917      32.8      
+avg_short_12         naive        688.4372   917      32.8      
+avg_short_13         suffix_tree  1.0963     93       1.7       
+avg_short_13         regex        1.8465     93       4.3       
+avg_short_13         rabin_karp   147.1056   93       0.1       
+avg_short_13         kmp          194.6127   93       3.6       
+avg_short_13         boyer_moore  319.6188   93       3.5       
+avg_short_13         naive        670.8629   93       3.6       
+avg_short_14         suffix_tree  0.1414     2        0.1       
+avg_short_14         regex        2.2418     2        1.2       
+avg_short_14         rabin_karp   147.4504   2        0.1       
+avg_short_14         kmp          191.6705   2        0.3       
+avg_short_14         boyer_moore  210.9030   2        0.3       
+avg_short_14         naive        663.8532   2        0.3       
+avg_short_15         regex        2.7116     588      21.7      
+avg_short_15         suffix_tree  6.4505     588      9.3       
+avg_short_15         rabin_karp   147.0025   588      0.1       
+avg_short_15         kmp          190.9033   588      20.8      
+avg_short_15         boyer_moore  349.6129   588      20.8      
+avg_short_15         naive        681.4084   588      20.9      
+avg_short_16         suffix_tree  0.1822     10       0.4       
+avg_short_16         regex        2.0592     10       1.4       
+avg_short_16         rabin_karp   147.5277   10       0.1       
+avg_short_16         kmp          190.6680   10       0.6       
+avg_short_16         boyer_moore  243.7470   10       0.6       
+avg_short_16         naive        655.8734   10       0.6       
+avg_short_17         suffix_tree  0.9366     91       1.5       
+avg_short_17         regex        2.0479     91       4.8       
+avg_short_17         rabin_karp   147.4152   91       0.1       
+avg_short_17         kmp          189.0823   91       3.4       
+avg_short_17         boyer_moore  294.4574   91       3.4       
+avg_short_17         naive        673.7983   91       3.4       
+avg_short_18         suffix_tree  0.2565     7        0.3       
+avg_short_18         regex        2.2512     7        1.3       
+avg_short_18         rabin_karp   147.2792   7        0.1       
+avg_short_18         kmp          190.2603   7        0.5       
+avg_short_18         boyer_moore  211.5218   7        0.5       
+avg_short_18         naive        669.1671   7        0.5       
+avg_short_19         suffix_tree  0.1801     8        0.3       
+avg_short_19         regex        2.2842     8        1.3       
+avg_short_19         rabin_karp   148.1695   8        0.1       
+avg_short_19         kmp          192.4112   8        0.5       
+avg_short_19         boyer_moore  298.7228   8        0.5       
+avg_short_19         naive        664.5815   8        0.5       
+avg_short_2          suffix_tree  1.4339     130      2.3       
+avg_short_2          regex        2.1496     130      5.7       
+avg_short_2          rabin_karp   147.5070   130      0.1       
+avg_short_2          kmp          188.5120   130      4.9       
+avg_short_2          boyer_moore  404.4245   130      4.9       
+avg_short_2          naive        666.2946   130      4.9       
+avg_short_3          suffix_tree  1.7537     156      2.7       
+avg_short_3          regex        2.2148     156      6.6       
+avg_short_3          rabin_karp   147.5105   156      0.1       
+avg_short_3          kmp          194.3908   156      5.8       
+avg_short_3          boyer_moore  345.2335   156      5.8       
+avg_short_3          naive        675.8139   156      5.8       
+avg_short_4          suffix_tree  0.1593     2        0.1       
+avg_short_4          regex        1.8405     2        1.2       
+avg_short_4          rabin_karp   149.2949   2        0.1       
+avg_short_4          kmp          190.1420   2        0.3       
+avg_short_4          boyer_moore  269.6561   2        0.3       
+avg_short_4          naive        656.9831   2        0.3       
+avg_short_5          regex        2.7666     556      20.8      
+avg_short_5          suffix_tree  5.7162     557      9.1       
+avg_short_5          rabin_karp   147.5124   557      0.1       
+avg_short_5          kmp          192.7501   557      20.0      
+avg_short_5          boyer_moore  306.5847   557      20.0      
+avg_short_5          naive        687.7695   557      20.0      
+avg_short_6          suffix_tree  1.4934     144      2.4       
+avg_short_6          regex        2.1057     144      6.1       
+avg_short_6          rabin_karp   146.9403   144      0.1       
+avg_short_6          kmp          194.1929   144      5.3       
+avg_short_6          boyer_moore  344.7641   144      5.2       
+avg_short_6          naive        678.9968   144      5.3       
+avg_short_7          regex        2.0783     235      9.5       
+avg_short_7          suffix_tree  2.4554     236      4.0       
+avg_short_7          rabin_karp   148.9368   236      0.1       
+avg_short_7          kmp          192.4930   236      8.7       
+avg_short_7          boyer_moore  331.5798   236      8.7       
+avg_short_7          naive        680.1062   236      8.7       
+avg_short_8          regex        2.6838     564      21.0      
+avg_short_8          suffix_tree  4.0032     576      10.1      
+avg_short_8          rabin_karp   149.2400   576      0.1       
+avg_short_8          kmp          195.3490   576      20.5      
+avg_short_8          boyer_moore  436.0205   576      20.5      
+avg_short_8          naive        691.9345   576      20.5      
+avg_short_9          regex        2.7814     528      20.1      
+avg_short_9          suffix_tree  4.7255     528      8.8       
+avg_short_9          rabin_karp   147.7046   528      0.1       
+avg_short_9          kmp          193.0632   528      19.2      
+avg_short_9          boyer_moore  335.8208   528      19.2      
+avg_short_9          naive        687.0658   528      19.3      
+avg_vlong_0          regex        14.0795    1        310.3     
+avg_vlong_0          boyer_moore  124.9304   1        126.9     
+avg_vlong_0          rabin_karp   147.5070   1        5.8       
+avg_vlong_0          kmp          192.4790   1        23.2      
+avg_vlong_1          regex        8.4455     1        98.7      
+avg_vlong_1          boyer_moore  127.4328   1        76.4      
+avg_vlong_1          rabin_karp   147.3470   1        3.5       
+avg_vlong_1          kmp          191.6819   1        14.1      
+avg_vlong_2          regex        12.5008    1        189.1     
+avg_vlong_2          boyer_moore  114.1091   1        116.1     
+avg_vlong_2          rabin_karp   147.1142   1        5.3       
+avg_vlong_2          kmp          194.4131   1        21.3      
+avg_vlong_3          regex        7.7656     1        87.9      
+avg_vlong_3          boyer_moore  101.9125   1        68.1      
+avg_vlong_3          rabin_karp   149.7058   1        3.1       
+avg_vlong_3          kmp          191.7703   1        12.5      
+avg_vlong_4          regex        8.9566     1        109.0     
+avg_vlong_4          boyer_moore  127.4265   1        84.1      
+avg_vlong_4          rabin_karp   147.5305   1        3.9       
+avg_vlong_4          kmp          194.7472   1        15.5      
+
+CATEGORY: RABIN-KARP-ADVERSARIAL
+================================
+Algorithm    Mean(ms)   Std(ms)    Preproc(ms)  Memory(kB)   Patterns   Total(ms)*  
+----------------------------------------------------------------------------------------
+suffix_tree  0.0532     0.0338     23.0882      0.0          10         23.6204     
+regex        1.7675     0.0968     0.0000       2.1          10         17.6751     
+boyer_moore  41.8446    8.4907     0.0000       0.7          10         418.4460    
+rabin_karp   148.1170   0.7019     0.0000       0.1          10         1481.1701   
+kmp          190.9615   2.6557     0.0000       0.4          10         1909.6151   
+naive        665.2589   8.5840     0.0000       0.2          10         6652.5892   
+
+* Total Time = (Mean × Patterns) + Preprocessing Time
+
+PER-PATTERN RESULTS:
+Pattern              Algorithm    Time(ms)   Matches  Memory(kB)
+----------------------------------------------------------------------
+rk_collision_0       suffix_tree  0.1057     0        0.0       
+rk_collision_0       regex        1.8380     0        2.3       
+rk_collision_0       boyer_moore  39.6538    0        0.6       
+rk_collision_0       rabin_karp   149.4719   0        0.1       
+rk_collision_0       kmp          187.4852   0        0.4       
+rk_collision_0       naive        657.5952   0        0.2       
+rk_collision_1       suffix_tree  0.0338     0        0.0       
+rk_collision_1       regex        1.7751     0        2.3       
+rk_collision_1       boyer_moore  53.3109    0        0.6       
+rk_collision_1       rabin_karp   147.6253   0        0.1       
+rk_collision_1       kmp          192.6511   0        0.4       
+rk_collision_1       naive        671.3635   0        0.2       
+rk_collision_2       suffix_tree  0.0332     0        0.0       
+rk_collision_2       regex        1.7681     0        2.3       
+rk_collision_2       boyer_moore  52.1052    0        0.6       
+rk_collision_2       rabin_karp   147.9334   0        0.1       
+rk_collision_2       kmp          188.1530   0        0.4       
+rk_collision_2       naive        654.7866   0        0.2       
+rk_collision_3       suffix_tree  0.0336     0        0.0       
+rk_collision_3       regex        1.8237     0        2.3       
+rk_collision_3       boyer_moore  52.5911    0        0.6       
+rk_collision_3       rabin_karp   148.2404   0        0.1       
+rk_collision_3       kmp          190.3608   0        0.4       
+rk_collision_3       naive        652.5881   0        0.2       
+rk_collision_4       suffix_tree  0.0332     0        0.0       
+rk_collision_4       regex        1.5946     0        0.6       
+rk_collision_4       boyer_moore  39.8045    0        0.6       
+rk_collision_4       rabin_karp   148.4042   0        0.1       
+rk_collision_4       kmp          188.3590   0        0.4       
+rk_collision_4       naive        665.1054   0        0.2       
+rk_similar_0         suffix_tree  0.0599     0        0.1       
+rk_similar_0         regex        1.7891     0        2.8       
+rk_similar_0         boyer_moore  32.4985    0        0.8       
+rk_similar_0         rabin_karp   146.7479   0        0.1       
+rk_similar_0         kmp          191.5821   0        0.5       
+rk_similar_0         naive        675.3277   0        0.2       
+rk_similar_1         suffix_tree  0.0391     0        0.1       
+rk_similar_1         regex        1.5870     0        0.6       
+rk_similar_1         boyer_moore  32.6950    0        0.8       
+rk_similar_1         rabin_karp   148.2192   0        0.1       
+rk_similar_1         kmp          191.1357   0        0.5       
+rk_similar_1         naive        665.4823   0        0.2       
+rk_similar_2         suffix_tree  0.0355     0        0.0       
+rk_similar_2         regex        1.8440     0        2.8       
+rk_similar_2         boyer_moore  37.0253    0        0.8       
+rk_similar_2         rabin_karp   147.7898   0        0.1       
+rk_similar_2         kmp          196.5035   0        0.5       
+rk_similar_2         naive        672.4975   0        0.2       
+rk_similar_3         suffix_tree  0.0340     0        0.0       
+rk_similar_3         regex        1.8364     0        2.8       
+rk_similar_3         boyer_moore  45.7522    0        0.8       
+rk_similar_3         rabin_karp   148.1381   0        0.1       
+rk_similar_3         kmp          192.5038   0        0.5       
+rk_similar_3         naive        661.2968   0        0.2       
+rk_similar_4         suffix_tree  0.1242     0        0.1       
+rk_similar_4         regex        1.8192     0        2.8       
+rk_similar_4         boyer_moore  33.0096    0        0.8       
+rk_similar_4         rabin_karp   148.5999   0        0.1       
+rk_similar_4         kmp          190.8809   0        0.5       
+rk_similar_4         naive        676.5462   0        0.2       
+
+CATEGORY: RARE
+==============
+Algorithm    Mean(ms)   Std(ms)    Preproc(ms)  Memory(kB)   Patterns   Total(ms)*  
+----------------------------------------------------------------------------------------
+suffix_tree  0.1487     0.0320     23.0882      0.1          10         24.5754     
+regex        2.1640     0.1702     0.0000       3.2          10         21.6403     
+rabin_karp   147.8334   0.6821     0.0000       0.2          10         1478.3342   
+boyer_moore  182.2934   48.5611    0.0000       0.8          10         1822.9336   
+kmp          191.5638   2.2796     0.0000       0.5          10         1915.6379   
+naive        671.5369   23.7587    0.0000       0.2          10         6715.3686   
+
+* Total Time = (Mean × Patterns) + Preprocessing Time
+
+PER-PATTERN RESULTS:
+Pattern              Algorithm    Time(ms)   Matches  Memory(kB)
+----------------------------------------------------------------------
+rare_0               suffix_tree  0.1453     1        0.1       
+rare_0               regex        2.3883     1        4.3       
+rare_0               rabin_karp   147.6723   1        0.2       
+rare_0               boyer_moore  182.1108   1        1.1       
+rare_0               kmp          193.8861   1        0.7       
+rare_0               naive        664.9118   1        0.2       
+rare_1               suffix_tree  0.1629     1        0.1       
+rare_1               regex        2.0358     1        2.7       
+rare_1               rabin_karp   148.0104   1        0.1       
+rare_1               boyer_moore  179.3191   1        0.7       
+rare_1               kmp          190.5430   1        0.5       
+rare_1               naive        720.2098   1        0.2       
+rare_2               suffix_tree  0.2003     1        0.1       
+rare_2               regex        2.4688     1        3.7       
+rare_2               rabin_karp   146.8499   1        0.2       
+rare_2               boyer_moore  158.6295   1        1.0       
+rare_2               kmp          194.4015   1        0.6       
+rare_2               naive        660.9690   1        0.2       
+rare_3               suffix_tree  0.1824     1        0.1       
+rare_3               regex        2.1415     1        4.7       
+rare_3               rabin_karp   147.5084   1        0.2       
+rare_3               kmp          188.5142   1        0.8       
+rare_3               boyer_moore  196.4001   1        1.3       
+rare_3               naive        668.7114   1        0.2       
+rare_4               suffix_tree  0.1116     1        0.1       
+rare_4               regex        1.9890     1        2.2       
+rare_4               boyer_moore  137.6707   1        0.6       
+rare_4               rabin_karp   147.8994   1        0.1       
+rare_4               kmp          189.3696   1        0.4       
+rare_4               naive        666.5382   1        0.2       
+rare_5               suffix_tree  0.1155     1        0.1       
+rare_5               regex        1.9167     1        2.3       
+rare_5               rabin_karp   149.1238   1        0.1       
+rare_5               kmp          191.3569   1        0.4       
+rare_5               boyer_moore  214.8290   1        0.6       
+rare_5               naive        656.2992   1        0.2       
+rare_6               suffix_tree  0.1112     1        0.1       
+rare_6               regex        2.1757     1        3.2       
+rare_6               boyer_moore  93.4098    1        0.8       
+rare_6               rabin_karp   148.5996   1        0.1       
+rare_6               kmp          193.7712   1        0.5       
+rare_6               naive        650.6227   1        0.2       
+rare_7               suffix_tree  0.1710     1        0.1       
+rare_7               regex        2.2467     1        3.1       
+rare_7               rabin_karp   148.1155   1        0.1       
+rare_7               boyer_moore  176.1097   1        0.8       
+rare_7               kmp          193.7926   1        0.5       
+rare_7               naive        652.4483   1        0.2       
+rare_8               suffix_tree  0.1629     1        0.1       
+rare_8               regex        2.1241     1        3.7       
+rare_8               rabin_karp   147.5044   1        0.2       
+rare_8               kmp          188.6975   1        0.6       
+rare_8               boyer_moore  208.4388   1        1.0       
+rare_8               naive        709.5768   1        0.2       
+rare_9               suffix_tree  0.1241     1        0.1       
+rare_9               regex        2.1536     1        2.3       
+rare_9               rabin_karp   147.0503   1        0.1       
+rare_9               kmp          191.3053   1        0.4       
+rare_9               boyer_moore  276.0160   1        0.6       
+rare_9               naive        665.0813   1        0.2       
+
+CATEGORY: REPETITIVE
+====================
+Algorithm    Mean(ms)   Std(ms)    Preproc(ms)  Memory(kB)   Patterns   Total(ms)*  
+----------------------------------------------------------------------------------------
+suffix_tree  0.0467     0.0320     23.0882      0.0          9          23.5084     
+regex        2.0519     0.1812     0.0000       3.8          9          18.4669     
+boyer_moore  39.8488    27.8216    0.0000       1.0          9          358.6389    
+rabin_karp   147.3519   0.5353     0.0000       0.2          9          1326.1667   
+kmp          191.2656   2.2977     0.0000       0.6          9          1721.3902   
+naive        661.9725   6.7209     0.0000       0.2          9          5957.7526   
+
+* Total Time = (Mean × Patterns) + Preprocessing Time
+
+PER-PATTERN RESULTS:
+Pattern              Algorithm    Time(ms)   Matches  Memory(kB)
+----------------------------------------------------------------------
+rep_AC_100           suffix_tree  0.1076     0        0.1       
+rep_AC_100           regex        2.1755     0        6.1       
+rep_AC_100           boyer_moore  15.9600    0        1.7       
+rep_AC_100           rabin_karp   147.7574   0        0.3       
+rep_AC_100           kmp          194.2124   0        0.9       
+rep_AC_100           naive        657.6490   0        0.2       
+rep_AC_20            suffix_tree  0.0340     0        0.1       
+rep_AC_20            regex        2.0460     0        1.7       
+rep_AC_20            boyer_moore  80.9040    0        0.4       
+rep_AC_20            rabin_karp   147.2648   0        0.1       
+rep_AC_20            kmp          190.8002   0        0.3       
+rep_AC_20            naive        659.1347   0        0.2       
+rep_AC_50            suffix_tree  0.0240     0        0.1       
+rep_AC_50            regex        2.2258     0        3.5       
+rep_AC_50            boyer_moore  33.0612    0        0.9       
+rep_AC_50            rabin_karp   146.9889   0        0.2       
+rep_AC_50            kmp          191.7571   0        0.5       
+rep_AC_50            naive        650.6882   0        0.2       
+rep_AT_100           suffix_tree  0.0967     0        0.0       
+rep_AT_100           regex        2.2875     0        6.1       
+rep_AT_100           boyer_moore  16.7320    0        1.7       
+rep_AT_100           rabin_karp   146.2701   0        0.3       
+rep_AT_100           kmp          189.1690   0        0.9       
+rep_AT_100           naive        670.1631   0        0.2       
+rep_AT_20            suffix_tree  0.0207     0        0.0       
+rep_AT_20            regex        2.0622     0        1.7       
+rep_AT_20            boyer_moore  82.8667    0        0.4       
+rep_AT_20            rabin_karp   147.7637   0        0.1       
+rep_AT_20            kmp          191.9820   0        0.3       
+rep_AT_20            naive        671.2500   0        0.2       
+rep_AT_50            suffix_tree  0.0305     0        0.0       
+rep_AT_50            regex        2.1676     0        3.5       
+rep_AT_50            boyer_moore  32.3582    0        0.9       
+rep_AT_50            rabin_karp   147.1617   0        0.2       
+rep_AT_50            kmp          191.2106   0        0.5       
+rep_AT_50            naive        659.9783   0        0.2       
+rep_allA_100         suffix_tree  0.0364     0        0.0       
+rep_allA_100         regex        1.8912     0        6.1       
+rep_allA_100         boyer_moore  12.0100    0        1.7       
+rep_allA_100         rabin_karp   147.2200   0        0.3       
+rep_allA_100         kmp          186.4815   0        0.9       
+rep_allA_100         naive        657.8315   0        0.2       
+rep_allA_20          suffix_tree  0.0346     0        0.0       
+rep_allA_20          regex        1.7860     0        1.7       
+rep_allA_20          boyer_moore  60.5571    0        0.4       
+rep_allA_20          rabin_karp   148.0402   0        0.1       
+rep_allA_20          kmp          193.0008   0        0.3       
+rep_allA_20          naive        667.4917   0        0.2       
+rep_allA_50          suffix_tree  0.0357     0        0.0       
+rep_allA_50          regex        1.8250     0        3.5       
+rep_allA_50          boyer_moore  24.1898    0        0.9       
+rep_allA_50          rabin_karp   147.6999   0        0.2       
+rep_allA_50          kmp          192.7765   0        0.5       
+rep_allA_50          naive        663.5659   0        0.2       
+
+CATEGORY: ZERO-OCCURRENCE
+=========================
+Algorithm    Mean(ms)   Std(ms)    Preproc(ms)  Memory(kB)   Patterns   Total(ms)*  
+----------------------------------------------------------------------------------------
+suffix_tree  0.0983     0.0193     23.0882      0.0          35         26.5304     
+regex        2.2957     0.3744     0.0000       7.7          35         80.3486     
+rabin_karp   148.7444   4.0741     0.0000       0.3          35         5206.0524   
+kmp          191.9254   2.5742     0.0000       1.1          35         6717.3889   
+boyer_moore  195.1971   57.3416    0.0000       3.7          35         6831.8978   
+naive        663.8307   6.8548     0.0000       0.2          20         13276.6139  
+
+* Total Time = (Mean × Patterns) + Preprocessing Time
+
+PER-PATTERN RESULTS:
+Pattern              Algorithm    Time(ms)   Matches  Memory(kB)
+----------------------------------------------------------------------
+zero_long_0          suffix_tree  0.1171     0        0.1       
+zero_long_0          regex        3.3723     0        28.7      
+zero_long_0          rabin_karp   148.2663   0        1.0       
+zero_long_0          kmp          191.1425   0        4.1       
+zero_long_0          boyer_moore  194.2364   0        21.7      
+zero_long_1          suffix_tree  0.0918     0        0.1       
+zero_long_1          regex        3.1751     0        24.4      
+zero_long_1          boyer_moore  90.3402    0        18.2      
+zero_long_1          rabin_karp   147.5113   0        0.9       
+zero_long_1          kmp          193.5898   0        3.5       
+zero_long_2          suffix_tree  0.0977     0        0.1       
+zero_long_2          regex        3.0247     0        24.6      
+zero_long_2          boyer_moore  127.4627   0        18.4      
+zero_long_2          rabin_karp   147.5949   0        0.9       
+zero_long_2          kmp          191.6968   0        3.5       
+zero_long_3          suffix_tree  0.0477     0        0.0       
+zero_long_3          regex        3.3027     0        26.2      
+zero_long_3          rabin_karp   147.6628   0        0.9       
+zero_long_3          boyer_moore  172.3442   0        19.8      
+zero_long_3          kmp          189.1671   0        3.7       
+zero_long_4          suffix_tree  0.1398     0        0.1       
+zero_long_4          regex        2.5349     0        18.8      
+zero_long_4          boyer_moore  128.4830   0        14.0      
+zero_long_4          rabin_karp   147.5112   0        0.7       
+zero_long_4          kmp          188.0145   0        2.7       
+zero_medium_0        suffix_tree  0.1026     0        0.0       
+zero_medium_0        regex        2.3646     0        11.9      
+zero_medium_0        rabin_karp   148.0198   0        0.4       
+zero_medium_0        boyer_moore  172.3075   0        3.2       
+zero_medium_0        kmp          188.6578   0        1.7       
+zero_medium_1        suffix_tree  0.1085     0        0.0       
+zero_medium_1        regex        2.3354     0        9.5       
+zero_medium_1        rabin_karp   147.7909   0        0.3       
+zero_medium_1        kmp          190.6205   0        1.3       
+zero_medium_1        boyer_moore  201.7741   0        2.5       
+zero_medium_2        suffix_tree  0.1158     0        0.0       
+zero_medium_2        regex        2.2571     0        6.8       
+zero_medium_2        rabin_karp   147.8432   0        0.3       
+zero_medium_2        boyer_moore  157.5657   0        1.8       
+zero_medium_2        kmp          192.5425   0        1.0       
+zero_medium_3        suffix_tree  0.1055     0        0.0       
+zero_medium_3        regex        2.2161     0        7.5       
+zero_medium_3        rabin_karp   147.8862   0        0.3       
+zero_medium_3        boyer_moore  177.9591   0        2.0       
+zero_medium_3        kmp          193.1557   0        1.1       
+zero_medium_4        suffix_tree  0.0924     0        0.0       
+zero_medium_4        regex        2.0563     0        8.3       
+zero_medium_4        boyer_moore  131.0653   0        2.2       
+zero_medium_4        rabin_karp   148.3528   0        0.3       
+zero_medium_4        kmp          190.0952   0        1.2       
+zero_medium_5        suffix_tree  0.0657     0        0.0       
+zero_medium_5        regex        2.4667     0        9.6       
+zero_medium_5        boyer_moore  142.8024   0        2.5       
+zero_medium_5        rabin_karp   148.5115   0        0.4       
+zero_medium_5        kmp          194.5743   0        1.3       
+zero_medium_6        suffix_tree  0.0917     0        0.0       
+zero_medium_6        regex        2.1870     0        11.5      
+zero_medium_6        rabin_karp   148.1573   0        0.4       
+zero_medium_6        boyer_moore  168.1862   0        3.1       
+zero_medium_6        kmp          190.8456   0        1.6       
+zero_medium_7        suffix_tree  0.1070     0        0.0       
+zero_medium_7        regex        2.5428     0        11.0      
+zero_medium_7        boyer_moore  122.0061   0        2.9       
+zero_medium_7        rabin_karp   148.1460   0        0.4       
+zero_medium_7        kmp          196.5968   0        1.5       
+zero_medium_8        suffix_tree  0.0899     0        0.0       
+zero_medium_8        regex        2.1481     0        11.4      
+zero_medium_8        rabin_karp   147.4099   0        0.4       
+zero_medium_8        kmp          190.7291   0        1.6       
+zero_medium_8        boyer_moore  203.9319   0        3.1       
+zero_medium_9        suffix_tree  0.0860     0        0.0       
+zero_medium_9        regex        2.2986     0        7.6       
+zero_medium_9        rabin_karp   146.9481   0        0.3       
+zero_medium_9        kmp          190.4665   0        1.1       
+zero_medium_9        boyer_moore  211.9187   0        2.0       
+zero_short_0         suffix_tree  0.0953     0        0.0       
+zero_short_0         regex        2.2510     0        2.2       
+zero_short_0         rabin_karp   148.3617   0        0.1       
+zero_short_0         boyer_moore  151.8560   0        0.6       
+zero_short_0         kmp          195.4980   0        0.4       
+zero_short_0         naive        672.9447   0        0.2       
+zero_short_1         suffix_tree  0.0651     0        0.0       
+zero_short_1         regex        2.0364     0        2.6       
+zero_short_1         rabin_karp   148.0090   0        0.1       
+zero_short_1         kmp          187.2655   0        0.4       
+zero_short_1         boyer_moore  202.0029   0        0.7       
+zero_short_1         naive        664.1188   0        0.2       
+zero_short_10        suffix_tree  0.0965     0        0.0       
+zero_short_10        regex        2.1383     0        3.4       
+zero_short_10        rabin_karp   147.3067   0        0.2       
+zero_short_10        kmp          190.4593   0        0.5       
+zero_short_10        boyer_moore  242.7015   0        0.9       
+zero_short_10        naive        655.9352   0        0.2       
+zero_short_11        suffix_tree  0.0832     0        0.1       
+zero_short_11        regex        2.2404     0        2.6       
+zero_short_11        rabin_karp   148.9068   0        0.1       
+zero_short_11        boyer_moore  174.1045   0        0.7       
+zero_short_11        kmp          193.2938   0        0.4       
+zero_short_11        naive        659.6952   0        0.2       
+zero_short_12        suffix_tree  0.0864     0        0.0       
+zero_short_12        regex        1.9431     0        2.3       
+zero_short_12        rabin_karp   147.6866   0        0.1       
+zero_short_12        boyer_moore  161.4527   0        0.6       
+zero_short_12        kmp          192.9351   0        0.4       
+zero_short_12        naive        657.4525   0        0.2       
+zero_short_13        suffix_tree  0.1018     0        0.0       
+zero_short_13        regex        1.8863     0        2.3       
+zero_short_13        rabin_karp   147.4450   0        0.1       
+zero_short_13        kmp          190.6413   0        0.4       
+zero_short_13        boyer_moore  284.0844   0        0.6       
+zero_short_13        naive        653.8955   0        0.2       
+zero_short_14        suffix_tree  0.1024     0        0.0       
+zero_short_14        regex        2.1148     0        3.4       
+zero_short_14        boyer_moore  124.5141   0        0.9       
+zero_short_14        rabin_karp   147.8184   0        0.2       
+zero_short_14        kmp          189.7714   0        0.5       
+zero_short_14        naive        654.3110   0        0.2       
+zero_short_15        suffix_tree  0.1015     0        0.0       
+zero_short_15        regex        2.0104     0        2.5       
+zero_short_15        rabin_karp   148.3294   0        0.1       
+zero_short_15        boyer_moore  184.3435   0        0.7       
+zero_short_15        kmp          190.2428   0        0.4       
+zero_short_15        naive        670.1167   0        0.2       
+zero_short_16        suffix_tree  0.0821     0        0.1       
+zero_short_16        regex        2.1013     0        1.9       
+zero_short_16        rabin_karp   147.9866   0        0.1       
+zero_short_16        kmp          190.9419   0        0.3       
+zero_short_16        boyer_moore  269.8270   0        0.5       
+zero_short_16        naive        667.5814   0        0.2       
+zero_short_17        suffix_tree  0.1197     0        0.0       
+zero_short_17        regex        1.9889     0        2.3       
+zero_short_17        rabin_karp   146.5271   0        0.1       
+zero_short_17        kmp          192.7650   0        0.4       
+zero_short_17        boyer_moore  248.2893   0        0.6       
+zero_short_17        naive        665.6122   0        0.2       
+zero_short_18        suffix_tree  0.0761     0        0.0       
+zero_short_18        regex        2.2213     0        1.9       
+zero_short_18        rabin_karp   148.1351   0        0.1       
+zero_short_18        kmp          193.1944   0        0.3       
+zero_short_18        boyer_moore  231.7053   0        0.5       
+zero_short_18        naive        663.6860   0        0.2       
+zero_short_19        suffix_tree  0.0881     0        0.0       
+zero_short_19        regex        2.2635     0        3.1       
+zero_short_19        rabin_karp   152.2612   0        0.1       
+zero_short_19        kmp          200.3020   0        0.5       
+zero_short_19        boyer_moore  251.5809   0        0.8       
+zero_short_19        naive        664.2050   0        0.2       
+zero_short_2         suffix_tree  0.1285     0        0.0       
+zero_short_2         regex        2.2037     0        2.9       
+zero_short_2         rabin_karp   152.1963   0        0.1       
+zero_short_2         boyer_moore  181.2461   0        0.8       
+zero_short_2         kmp          190.0405   0        0.5       
+zero_short_2         naive        661.9260   0        0.2       
+zero_short_3         suffix_tree  0.1347     0        0.0       
+zero_short_3         regex        2.0577     0        2.4       
+zero_short_3         rabin_karp   171.1943   0        0.1       
+zero_short_3         kmp          189.2837   0        0.4       
+zero_short_3         boyer_moore  248.2852   0        0.6       
+zero_short_3         naive        675.0684   0        0.2       
+zero_short_4         suffix_tree  0.1113     0        0.0       
+zero_short_4         regex        1.9325     0        2.4       
+zero_short_4         rabin_karp   147.1984   0        0.1       
+zero_short_4         kmp          193.8590   0        0.4       
+zero_short_4         boyer_moore  312.0320   0        0.6       
+zero_short_4         naive        671.3099   0        0.2       
+zero_short_5         suffix_tree  0.1158     0        0.0       
+zero_short_5         regex        2.2178     0        2.4       
+zero_short_5         rabin_karp   146.9975   0        0.1       
+zero_short_5         boyer_moore  165.9310   0        0.6       
+zero_short_5         kmp          191.3715   0        0.4       
+zero_short_5         naive        674.4213   0        0.2       
+zero_short_6         suffix_tree  0.0901     0        0.0       
+zero_short_6         regex        2.0302     0        3.3       
+zero_short_6         rabin_karp   147.1220   0        0.1       
+zero_short_6         boyer_moore  166.4487   0        0.8       
+zero_short_6         kmp          193.7379   0        0.5       
+zero_short_6         naive        662.9726   0        0.2       
+zero_short_7         suffix_tree  0.0887     0        0.0       
+zero_short_7         regex        1.9780     0        3.2       
+zero_short_7         rabin_karp   147.9419   0        0.1       
+zero_short_7         kmp          192.0943   0        0.5       
+zero_short_7         boyer_moore  294.0732   0        0.8       
+zero_short_7         naive        667.6827   0        0.2       
+zero_short_8         suffix_tree  0.1160     0        0.0       
+zero_short_8         regex        2.2939     0        3.1       
+zero_short_8         rabin_karp   148.7152   0        0.1       
+zero_short_8         kmp          193.9758   0        0.5       
+zero_short_8         boyer_moore  215.5923   0        0.8       
+zero_short_8         naive        660.8341   0        0.2       
+zero_short_9         suffix_tree  0.0996     0        0.0       
+zero_short_9         regex        2.1567     0        2.1       
+zero_short_9         rabin_karp   148.3010   0        0.1       
+zero_short_9         kmp          193.8207   0        0.3       
+zero_short_9         boyer_moore  319.4438   0        0.5       
+zero_short_9         naive        652.8448   0        0.2       
+
+DATASET CATEGORIES EXPLANATION
+===================================
+• average:           Real genome subsequences (typical performance)
+• repetitive:        Synthetic worst-case patterns (algorithmic stress)
+• rare:              Patterns occurring 1-5 times (sparse matches)
+• zero-occurrence:   Random patterns absent from genome (no matches)
+• rabin-karp-adversarial: Hash collision-prone patterns (RK stress)
+• many-query:        100 short patterns (amortization testing)
+
+NOTE: Each pattern file contains one DNA string tested against 500K E.coli genome

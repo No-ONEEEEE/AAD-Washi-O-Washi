@@ -1,0 +1,2669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Washi O Washi - Pattern Matching Lab</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    
+    <style>
+        :root {
+            --primary-color: #4ECDC4;
+            --secondary-color: #FF6B6B;
+            --dark-bg: #1a1a2e;
+            --card-bg: #16213e;
+            --text-light: #e4e4e4;
+            --accent-1: #95E1D3;
+            --accent-2: #F38181;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: var(--text-light);
+        }
+        
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #fff, var(--primary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        /* Cards */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #fff;
+        }
+        
+        /* Input Areas */
+        .input-group-custom {
+            margin-bottom: 20px;
+        }
+        
+        .input-group-custom label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #fff;
+        }
+        
+        .input-group-custom textarea,
+        .input-group-custom input {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            color: #fff;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .input-group-custom textarea:focus,
+        .input-group-custom input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .input-group-custom textarea::placeholder,
+        .input-group-custom input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+        
+        /* Algorithm Selection */
+        .algo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .algo-checkbox {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .algo-checkbox:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: scale(1.02);
+        }
+        
+        .algo-checkbox.selected {
+            border-color: var(--primary-color);
+            background: rgba(78, 205, 196, 0.2);
+        }
+        
+        .algo-checkbox input[type="checkbox"] {
+            margin-right: 10px;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+        
+        .algo-info-btn {
+            float: right;
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            cursor: pointer;
+            font-size: 18px;
+            transition: transform 0.2s ease;
+        }
+        
+        .algo-info-btn:hover {
+            transform: rotate(180deg);
+        }
+        
+        /* Buttons */
+        .btn-custom {
+            padding: 12px 30px;
+            border-radius: 25px;
+            border: none;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 5px;
+        }
+        
+        .btn-primary-custom {
+            background: linear-gradient(135deg, var(--primary-color), #3BAEA0);
+            color: #fff;
+        }
+        
+        .btn-primary-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(78, 205, 196, 0.4);
+        }
+        
+        .btn-secondary-custom {
+            background: linear-gradient(135deg, var(--secondary-color), #E55353);
+            color: #fff;
+        }
+        
+        .btn-secondary-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(255, 107, 107, 0.4);
+        }
+        
+        /* Results */
+        .results-container {
+            margin-top: 30px;
+        }
+        
+        .result-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .result-algo-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        
+        .result-time {
+            background: rgba(78, 205, 196, 0.3);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+        
+        .matches-display {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .match-highlight {
+            background: rgba(78, 205, 196, 0.4);
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+        
+        /* Loading */
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: var(--primary-color);
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Sample Datasets */
+        .sample-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            padding: 8px 15px;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            display: inline-block;
+        }
+        
+        .sample-btn:hover {
+            background: rgba(78, 205, 196, 0.3);
+            border-color: var(--primary-color);
+        }
+        
+        /* Tabs */
+        .nav-tabs-custom {
+            border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 20px;
+        }
+        
+        .nav-tabs-custom .nav-link {
+            color: rgba(255, 255, 255, 0.7);
+            border: none;
+            padding: 12px 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-tabs-custom .nav-link.active {
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--primary-color);
+            background: transparent;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .algo-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 5px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #3BAEA0;
+        }
+        
+        /* Visualization Styles */
+        .text-grid, .pattern-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 16px;
+        }
+        
+        .char-box {
+            width: 35px;
+            height: 35px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .char-box.current {
+            background: rgba(255, 193, 7, 0.5);
+            border-color: #ffc107;
+            animation: pulse 1s infinite;
+        }
+        
+        .char-box.match {
+            background: rgba(40, 167, 69, 0.5);
+            border-color: #28a745;
+        }
+        
+        .char-box.mismatch {
+            background: rgba(220, 53, 69, 0.5);
+            border-color: #dc3545;
+        }
+        
+        .char-box.window {
+            background: rgba(0, 123, 255, 0.3);
+            border-color: #007bff;
+        }
+        
+        .char-box.found-match {
+            background: rgba(40, 167, 69, 0.7);
+            border-color: #28a745;
+            box-shadow: 0 0 15px rgba(40, 167, 69, 0.5);
+        }
+        
+        .char-box.spurious-hit {
+            background: rgba(255, 165, 0, 0.5);
+            border-color: #ff9800;
+            box-shadow: 0 0 15px rgba(255, 165, 0, 0.5);
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        .comparison-row {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            margin: 5px 0;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            border-left: 3px solid transparent;
+        }
+        
+        .comparison-row.match-row {
+            border-left-color: #28a745;
+        }
+        
+        .comparison-row.mismatch-row {
+            border-left-color: #dc3545;
+        }
+        
+        .glass-input {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            color: #fff;
+            padding: 8px 12px;
+        }
+        
+        .glass-input:focus {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: var(--primary-color);
+            color: #fff;
+            outline: none;
+        }
+        
+        .glass-input option {
+            background: var(--dark-bg);
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <!-- Header -->
+        <div class="header">
+            <h1><i class="fas fa-dna"></i> Washi O Washi</h1>
+            <p>Interactive Pattern Matching Algorithm Explorer</p>
+        </div>
+        
+        <!-- Navigation Tabs -->
+        <ul class="nav nav-tabs-custom" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" data-bs-toggle="tab" href="#search-tab">
+                    <i class="fas fa-search"></i> Pattern Search
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="tab" href="#visualize-tab">
+                    <i class="fas fa-chart-line"></i> Visualize
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="tab" href="#benchmark-tab">
+                    <i class="fas fa-tachometer-alt"></i> Benchmark
+                </a>
+            </li>
+        </ul>
+        
+        <!-- Tab Content -->
+        <div class="tab-content">
+            <!-- PATTERN SEARCH TAB -->
+            <div id="search-tab" class="tab-pane fade show active">
+                <div class="row">
+                    <!-- Left Panel: Input -->
+                    <div class="col-lg-6">
+                        <div class="glass-card">
+                            <h3 class="card-title"><i class="fas fa-keyboard"></i> Input</h3>
+                            
+                            <!-- Sample Datasets -->
+                            <div class="mb-3">
+                                <label><i class="fas fa-database"></i> Sample Datasets:</label>
+                                <div id="sampleDatasets"></div>
+                            </div>
+                            
+                            <!-- Text Input -->
+                            <div class="input-group-custom">
+                                <label for="inputText">
+                                    <i class="fas fa-file-alt"></i> Text / Sequence
+                                    <span class="badge bg-secondary" id="textLength">0 chars</span>
+                                </label>
+                                <textarea id="inputText" rows="6" placeholder="Enter text or DNA sequence to search..."></textarea>
+                            </div>
+                            
+                            <!-- Pattern Input -->
+                            <div class="input-group-custom">
+                                <label for="inputPattern">
+                                    <i class="fas fa-search"></i> Pattern
+                                    <span class="badge bg-secondary" id="patternLength">0 chars</span>
+                                </label>
+                                <input type="text" id="inputPattern" placeholder="Enter pattern to find...">
+                            </div>
+                            
+                            <!-- File Upload -->
+                            <div class="input-group-custom">
+                                <label><i class="fas fa-upload"></i> Or Upload File:</label>
+                                <input type="file" id="fileUpload" class="form-control" accept=".txt,.fasta,.fa,.seq,.fastq">
+                            </div>
+                            
+                            <!-- Search Type -->
+                            <div class="input-group-custom">
+                                <label><i class="fas fa-cog"></i> Search Type:</label>
+                                <div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="searchType" id="exactSearch" value="exact" checked>
+                                        <label class="form-check-label" for="exactSearch">Exact Match</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="searchType" id="approxSearch" value="approximate">
+                                        <label class="form-check-label" for="approxSearch">Approximate Match</label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Max Errors (for approximate) -->
+                            <div class="input-group-custom" id="maxErrorsGroup" style="display: none;">
+                                <label for="maxErrors"><i class="fas fa-sliders-h"></i> Max Errors: <span id="maxErrorsValue">1</span></label>
+                                <input type="range" class="form-range" id="maxErrors" min="0" max="5" value="1">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Right Panel: Algorithm Selection -->
+                    <div class="col-lg-6">
+                        <div class="glass-card">
+                            <h3 class="card-title"><i class="fas fa-brain"></i> Select Algorithms</h3>
+                            
+                            <!-- Exact Algorithms -->
+                            <h5 class="mb-3 text-primary-custom">Exact Matching:</h5>
+                            <div class="algo-grid" id="exactAlgorithms"></div>
+                            
+                            <!-- Approximate Algorithms -->
+                            <h5 class="mb-3 text-secondary-custom mt-4">Approximate Matching:</h5>
+                            <div class="algo-grid" id="approximateAlgorithms"></div>
+                            
+                            <!-- Quick Select Buttons -->
+                            <div class="mt-3">
+                                <button class="btn btn-sm btn-outline-light" onclick="selectAllAlgos()">
+                                    <i class="fas fa-check-double"></i> Select All
+                                </button>
+                                <button class="btn btn-sm btn-outline-light" onclick="deselectAllAlgos()">
+                                    <i class="fas fa-times"></i> Deselect All
+                                </button>
+                            </div>
+                            
+                            <!-- Action Buttons -->
+                            <div class="mt-4 text-center">
+                                <button class="btn-custom btn-primary-custom" onclick="performSearch()">
+                                    <i class="fas fa-play"></i> Run Search
+                                </button>
+                                <button class="btn-custom btn-secondary-custom" onclick="clearAll()">
+                                    <i class="fas fa-redo"></i> Clear
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Results -->
+                <div id="resultsSection" class="results-container" style="display: none;">
+                    <div class="glass-card">
+                        <h3 class="card-title"><i class="fas fa-chart-bar"></i> Results</h3>
+                        <div id="resultsContent"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- VISUALIZE TAB -->
+            <div id="visualize-tab" class="tab-pane fade">
+                <div class="glass-card">
+                    <h3 class="card-title"><i class="fas fa-chart-line"></i> Algorithm Visualization</h3>
+                    
+                    <!-- Algorithm Selection -->
+                    <div class="mb-4">
+                        <label class="form-label">Select Algorithm to Visualize:</label>
+                        <select id="vizAlgorithm" class="form-select glass-input">
+                            <optgroup label="Exact Matching Algorithms">
+                                <option value="naive">Naive String Matching</option>
+                                <option value="kmp">Knuth-Morris-Pratt (KMP)</option>
+                                <option value="boyer_moore">Boyer-Moore</option>
+                                <option value="rabin_karp">Rabin-Karp</option>
+                                <option value="suffix_tree">Suffix Tree</option>
+                            </optgroup>
+                            <optgroup label="Approximate Matching Algorithms">
+                                <option value="levenshtein">Levenshtein Distance</option>
+                                <option value="shift_or">Shift-Or</option>
+                            </optgroup>
+                        </select>
+                    </div>
+                    
+                    <!-- Input Fields -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <label class="form-label">Text:</label>
+                            <input type="text" id="vizText" class="form-control glass-input" 
+                                   value="ATCGATCGATCGTAGCTAGC" placeholder="Enter text...">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Pattern:</label>
+                            <input type="text" id="vizPattern" class="form-control glass-input" 
+                                   value="ATCG" placeholder="Enter pattern...">
+                        </div>
+                    </div>
+                    
+                    <!-- Start Visualization Button -->
+                    <div class="text-center mb-4">
+                        <button class="btn-custom btn-primary-custom" onclick="startVisualization()">
+                            <i class="fas fa-play"></i> Start Visualization
+                        </button>
+                    </div>
+                    
+                    <!-- Visualization Controls -->
+                    <div id="vizControls" class="text-center mb-4" style="display: none;">
+                        <button class="btn-custom btn-sm" onclick="vizPrevStep()" id="btnPrev">
+                            <i class="fas fa-step-backward"></i> Previous
+                        </button>
+                        <button class="btn-custom btn-sm btn-primary-custom" onclick="vizPlayPause()" id="btnPlayPause">
+                            <i class="fas fa-play"></i> Play
+                        </button>
+                        <button class="btn-custom btn-sm" onclick="vizNextStep()" id="btnNext">
+                            <i class="fas fa-step-forward"></i> Next
+                        </button>
+                        <button class="btn-custom btn-sm" onclick="vizReset()">
+                            <i class="fas fa-redo"></i> Reset
+                        </button>
+                        
+                        <div class="mt-2">
+                            <label>Speed: </label>
+                            <select id="vizSpeed" class="glass-input" style="width: auto; display: inline-block; padding: 5px;">
+                                <option value="2000">Slow (2s)</option>
+                                <option value="1000" selected>Normal (1s)</option>
+                                <option value="500">Fast (0.5s)</option>
+                                <option value="200">Very Fast (0.2s)</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Current Step Display -->
+                    <div id="vizStepInfo" class="glass-card p-3 mb-3" style="display: none;">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <strong>Step:</strong> <span id="stepNumber">0</span> / <span id="totalSteps">0</span>
+                            </div>
+                            <div class="col-md-6 text-end">
+                                <strong>Comparisons:</strong> <span id="stepComparisons">0</span>
+                            </div>
+                        </div>
+                        <div class="mt-2">
+                            <strong>Explanation:</strong> <span id="stepExplanation"></span>
+                        </div>
+                    </div>
+                    
+                    <!-- Text Visualization Grid -->
+                    <div id="vizTextGrid" class="mb-4" style="display: none;">
+                        <h5>Text & Pattern Alignment:</h5>
+                        <div id="textDisplay" class="text-grid"></div>
+                        <div id="patternDisplay" class="pattern-grid mt-2"></div>
+                    </div>
+                    
+                    <!-- Character-by-Character Comparison -->
+                    <div id="vizComparison" class="glass-card p-3 mb-3" style="display: none;">
+                        <h5>Character Comparisons:</h5>
+                        <div id="comparisonDetails"></div>
+                    </div>
+                    
+                    <!-- Algorithm State Variables -->
+                    <div id="vizState" class="glass-card p-3 mb-3" style="display: none;">
+                        <h5>Algorithm State:</h5>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <strong>Text Position (i):</strong> <span id="stateI">0</span>
+                            </div>
+                            <div class="col-md-3">
+                                <strong>Pattern Index (j):</strong> <span id="stateJ">0</span>
+                            </div>
+                            <div class="col-md-3">
+                                <strong>Pattern Length (m):</strong> <span id="stateM">0</span>
+                            </div>
+                            <div class="col-md-3">
+                                <strong>Text Length (n):</strong> <span id="stateN">0</span>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-md-6">
+                                <strong>Window:</strong> [<span id="stateWindow">0</span> - <span id="stateWindowEnd">0</span>]
+                            </div>
+                            <div class="col-md-6">
+                                <strong>Total Comparisons:</strong> <span id="stateTotalComparisons">0</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Rabin-Karp Specific: Hash Values -->
+                    <div id="vizHashInfo" class="glass-card p-3 mb-3" style="display: none;">
+                        <h5><i class="fas fa-hashtag"></i> Hash Information (Rabin-Karp):</h5>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <strong>Pattern Hash:</strong> <span id="hashPattern" class="badge bg-primary">0</span>
+                            </div>
+                            <div class="col-md-4">
+                                <strong>Current Window Hash:</strong> <span id="hashCurrent" class="badge bg-info">0</span>
+                            </div>
+                            <div class="col-md-4">
+                                <strong>Hash Match:</strong> <span id="hashMatch">❌</span>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-md-3">
+                                <strong>Base:</strong> <span id="hashBase">256</span>
+                            </div>
+                            <div class="col-md-3">
+                                <strong>Prime:</strong> <span id="hashPrime">101</span>
+                            </div>
+                            <div class="col-md-3">
+                                <strong>Hash Comparisons:</strong> <span id="hashComparisons">0</span>
+                            </div>
+                            <div class="col-md-3">
+                                <strong>Spurious Hits:</strong> <span id="hashSpurious" class="text-warning">0</span>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                <strong>Window Text:</strong> '<span id="hashWindowText" style="font-family: 'JetBrains Mono', monospace; color: #ffc107;"></span>'
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- KMP Specific: Failure Function -->
+                    <div id="vizKMPInfo" class="glass-card p-3 mb-3" style="display: none;">
+                        <h5><i class="fas fa-table"></i> Failure Function (LPS Array) - KMP:</h5>
+                        <div class="row mb-2">
+                            <div class="col-12">
+                                <div id="failureFunctionDisplay" style="font-family: 'JetBrains Mono', monospace;">
+                                    <!-- Failure function array will be displayed here -->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <strong>Text Index (i):</strong> <span id="kmpTextIndex" class="badge bg-primary">0</span>
+                            </div>
+                            <div class="col-md-3">
+                                <strong>Pattern Index (j):</strong> <span id="kmpPatternIndex" class="badge bg-info">0</span>
+                            </div>
+                            <div class="col-md-3">
+                                <strong>Backtracks:</strong> <span id="kmpBacktracks" class="text-warning">0</span>
+                            </div>
+                            <div class="col-md-3">
+                                <strong>Efficiency:</strong> <span id="kmpEfficiency">100%</span>
+                            </div>
+                        </div>
+                        <div class="row mt-2" id="kmpBacktrackInfo" style="display: none;">
+                            <div class="col-12">
+                                <div class="alert alert-warning mb-0" style="font-size: 0.9em;">
+                                    <strong>⚡ Backtrack:</strong> <span id="kmpBacktrackDetails"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Boyer-Moore Specific: Bad Character Table -->
+                    <div id="vizBoyerMooreInfo" class="glass-card p-3 mb-3" style="display: none;">
+                        <h5><i class="fas fa-arrow-right"></i> Bad Character Table - Boyer-Moore:</h5>
+                        <div class="row mb-2">
+                            <div class="col-12">
+                                <div id="badCharTableDisplay" style="font-family: 'JetBrains Mono', monospace;">
+                                    <!-- Bad character table will be displayed here -->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <strong>Scan Direction:</strong> <span class="badge bg-warning">← Right-to-Left</span>
+                            </div>
+                            <div class="col-md-3">
+                                <strong>Current Shift:</strong> <span id="bmShift" class="badge bg-info">0</span>
+                            </div>
+                            <div class="col-md-3">
+                                <strong>Chars Skipped:</strong> <span id="bmSkipped" class="text-success">0</span>
+                            </div>
+                            <div class="col-md-3">
+                                <strong>Skip Efficiency:</strong> <span id="bmEfficiency">0%</span>
+                            </div>
+                        </div>
+                        <div class="row mt-2" id="bmShiftInfo">
+                            <div class="col-12">
+                                <div class="alert alert-info mb-0" style="font-size: 0.9em;">
+                                    <strong>↪ Shift Reason:</strong> <span id="bmShiftReason">-</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Suffix Tree Specific: Tree Traversal -->
+                    <div id="vizSuffixTreeInfo" class="glass-card p-3 mb-3" style="display: none;">
+                        <h5><i class="fas fa-project-diagram"></i> Suffix Tree Traversal:</h5>
+                        <div class="row mb-2">
+                            <div class="col-12">
+                                <div class="alert alert-success mb-2" style="font-size: 0.95em;">
+                                    <strong>Path Taken:</strong> '<span id="stPath" style="font-family: 'JetBrains Mono', monospace; color: #28a745; font-weight: bold;"></span>'
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <strong>Tree Nodes:</strong> <span id="stNodes" class="badge bg-primary">0</span>
+                            </div>
+                            <div class="col-md-3">
+                                <strong>Tree Depth:</strong> <span id="stDepth" class="badge bg-info">0</span>
+                            </div>
+                            <div class="col-md-3">
+                                <strong>Nodes Visited:</strong> <span id="stVisited" class="text-success">0</span>
+                            </div>
+                            <div class="col-md-3">
+                                <strong>Matches Found:</strong> <span id="stMatches">0</span>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-md-6">
+                                <strong>Current Depth:</strong> <span id="stCurrentDepth">0</span>
+                            </div>
+                            <div class="col-md-6">
+                                <strong>Suffixes Indexed:</strong> <span id="stSuffixes">0</span>
+                            </div>
+                        </div>
+                        <div class="row mt-2" id="stMatchIndices" style="display: none;">
+                            <div class="col-12">
+                                <div class="alert alert-info mb-0" style="font-size: 0.9em;">
+                                    <strong>Suffix Indices at Node:</strong> <span id="stIndices"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Levenshtein Specific: DP Matrix and Edit Operations -->
+                    <div id="vizLevenshteinInfo" class="glass-card p-3 mb-3" style="display: none;">
+                        <h5><i class="fas fa-th"></i> Dynamic Programming Matrix - Levenshtein:</h5>
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <div id="dpMatrixDisplay" style="overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 0.85em;">
+                                    <!-- DP Matrix will be displayed here -->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <strong>Current Cell:</strong> <span id="levCell" class="badge bg-primary">-</span>
+                            </div>
+                            <div class="col-md-3">
+                                <strong>Edit Distance:</strong> <span id="levDistance" class="badge bg-info">0</span>
+                            </div>
+                            <div class="col-md-3">
+                                <strong>Operation:</strong> <span id="levOperation">-</span>
+                            </div>
+                            <div class="col-md-3">
+                                <strong>Cells Computed:</strong> <span id="levCells">0</span>
+                            </div>
+                        </div>
+                        <div class="row mt-2" id="levCostInfo">
+                            <div class="col-12">
+                                <div class="alert alert-info mb-0" style="font-size: 0.9em;">
+                                    <strong>Cost Calculation:</strong><br>
+                                    <span id="levCostDetails">-</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-2" id="levAlignmentInfo" style="display: none;">
+                            <div class="col-12">
+                                <div class="alert alert-success mb-0" style="font-size: 0.9em;">
+                                    <strong>Alignment:</strong><br>
+                                    <div style="font-family: 'JetBrains Mono', monospace; font-size: 1.1em;">
+                                        Pattern: <span id="levPatternAligned"></span><br>
+                                        Text:&nbsp;&nbsp;&nbsp;&nbsp;<span id="levTextAligned"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Shift-Or Specific: Bit Vectors and Pattern Masks -->
+                    <div id="vizShiftOrInfo" class="glass-card p-3 mb-3" style="display: none;">
+                        <h5><i class="fas fa-barcode"></i> Bit-Parallel Processing - Shift-Or:</h5>
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <div id="patternMasksDisplay" style="overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 0.85em;">
+                                    <!-- Pattern masks will be displayed here -->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <div id="stateVectorsDisplay" style="overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 0.9em;">
+                                    <!-- State vectors will be displayed here -->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <strong>Text Char:</strong> <span id="shiftOrChar" class="badge bg-primary">-</span>
+                            </div>
+                            <div class="col-md-3">
+                                <strong>In Pattern:</strong> <span id="shiftOrInPattern">-</span>
+                            </div>
+                            <div class="col-md-3">
+                                <strong>Operations:</strong> <span id="shiftOrOps">0</span>
+                            </div>
+                            <div class="col-md-3">
+                                <strong>Matches:</strong> <span id="shiftOrMatches">0</span>
+                            </div>
+                        </div>
+                        <div class="row mt-2" id="shiftOrOperationsInfo">
+                            <div class="col-12">
+                                <div class="alert alert-info mb-0" style="font-size: 0.9em;">
+                                    <strong>Bit Operations:</strong><br>
+                                    <span id="shiftOrOperationDetails">-</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-2" id="shiftOrMatchInfo" style="display: none;">
+                            <div class="col-12">
+                                <div class="alert alert-success mb-0" style="font-size: 0.9em;">
+                                    <strong>Match Details:</strong><br>
+                                    <span id="shiftOrMatchDetails"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Match Highlighting Summary -->
+                    <div id="vizMatches" class="glass-card p-3 mb-3" style="display: none;">
+                        <h5>Matches Found:</h5>
+                        <div id="matchesList"></div>
+                    </div>
+                    
+                    <!-- Statistics Dashboard -->
+                    <div id="vizSummary" class="glass-card p-4" style="display: none;">
+                        <h4 class="text-center mb-3">
+                            <i class="fas fa-chart-pie"></i> Algorithm Statistics Summary
+                        </h4>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <table class="table table-dark table-bordered">
+                                    <tr>
+                                        <td><strong>Algorithm:</strong></td>
+                                        <td id="summaryAlgo"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Text Length:</strong></td>
+                                        <td id="summaryTextLen"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Pattern Length:</strong></td>
+                                        <td id="summaryPatternLen"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Matches Found:</strong></td>
+                                        <td id="summaryMatchesFound"></td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-md-6">
+                                <table class="table table-dark table-bordered">
+                                    <tr>
+                                        <td><strong>Total Comparisons:</strong></td>
+                                        <td id="summaryTotalComp"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Positions Checked:</strong></td>
+                                        <td id="summaryPositions"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Time Complexity:</strong></td>
+                                        <td id="summaryTimeComp"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Space Complexity:</strong></td>
+                                        <td id="summarySpaceComp"></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <div class="alert alert-info">
+                                    <strong>Avg Comparisons per Position:</strong> <span id="summaryAvgComp"></span><br>
+                                    <strong>Worst Case Comparisons:</strong> <span id="summaryWorstCase"></span><br>
+                                    <strong>Match Positions:</strong> <span id="summaryMatchPos"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- BENCHMARK TAB -->
+            <div id="benchmark-tab" class="tab-pane fade">
+                <div class="glass-card">
+                    <h3 class="card-title"><i class="fas fa-tachometer-alt"></i> Performance Benchmark</h3>
+                    <div id="benchmarkContent">
+                        <p class="text-center">Click "Run Benchmark" to compare algorithm performance</p>
+                        <div class="text-center">
+                            <button class="btn-custom btn-primary-custom" onclick="runBenchmark()">
+                                <i class="fas fa-play"></i> Run Benchmark
+                            </button>
+                        </div>
+                        <canvas id="benchmarkChart" style="max-height: 400px; margin-top: 20px;"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Algorithm Info Modal -->
+    <div class="modal fade" id="algoInfoModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content" style="background: var(--dark-bg); color: var(--text-light);">
+                <div class="modal-header" style="border-bottom: 1px solid rgba(255,255,255,0.1);">
+                    <h5 class="modal-title" id="modalAlgoName"></h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="modalAlgoContent"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JavaScript -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    
+    <script>
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadAlgorithms();
+            loadSampleDatasets();
+            loadEducationContent();
+            setupEventListeners();
+        });
+        
+        // Global variables
+        let algorithmsData = {};
+        let samplesData = {};
+        
+        // Load algorithms from server
+        async function loadAlgorithms() {
+            try {
+                const response = await fetch('/api/all-algorithms');
+                algorithmsData = await response.json();
+                renderAlgorithmCheckboxes();
+            } catch (error) {
+                console.error('Error loading algorithms:', error);
+            }
+        }
+        
+        // Render algorithm checkboxes
+        function renderAlgorithmCheckboxes() {
+            const exactContainer = document.getElementById('exactAlgorithms');
+            const approxContainer = document.getElementById('approximateAlgorithms');
+            
+            exactContainer.innerHTML = '';
+            approxContainer.innerHTML = '';
+            
+            for (const [key, algo] of Object.entries(algorithmsData)) {
+                const div = document.createElement('div');
+                div.className = 'algo-checkbox';
+                div.innerHTML = `
+                    <input type="checkbox" id="algo_${key}" value="${key}">
+                    <label for="algo_${key}">${algo.name}</label>
+                    <button class="algo-info-btn" onclick="showAlgoInfo('${key}')">
+                        <i class="fas fa-info-circle"></i>
+                    </button>
+                `;
+                
+                div.querySelector('input').addEventListener('change', function() {
+                    if (this.checked) {
+                        div.classList.add('selected');
+                    } else {
+                        div.classList.remove('selected');
+                    }
+                });
+                
+                if (algo.category === 'Exact Matching') {
+                    exactContainer.appendChild(div);
+                } else {
+                    approxContainer.appendChild(div);
+                }
+            }
+        }
+        
+        // Load sample datasets
+        async function loadSampleDatasets() {
+            try {
+                const response = await fetch('/api/sample-datasets');
+                samplesData = await response.json();
+                renderSampleButtons();
+            } catch (error) {
+                console.error('Error loading samples:', error);
+            }
+        }
+        
+        // Render sample dataset buttons
+        function renderSampleButtons() {
+            const container = document.getElementById('sampleDatasets');
+            container.innerHTML = '';
+            
+            for (const [key, sample] of Object.entries(samplesData)) {
+                const btn = document.createElement('button');
+                btn.className = 'sample-btn';
+                btn.innerHTML = `<i class="fas fa-database"></i> ${sample.name}`;
+                btn.onclick = () => loadSample(key);
+                container.appendChild(btn);
+            }
+        }
+        
+        // Load a sample dataset
+        function loadSample(key) {
+            const sample = samplesData[key];
+            document.getElementById('inputText').value = sample.text;
+            document.getElementById('inputPattern').value = sample.pattern;
+            updateLengthIndicators();
+        }
+        
+        // Setup event listeners
+        function setupEventListeners() {
+            // Text and pattern length indicators
+            document.getElementById('inputText').addEventListener('input', updateLengthIndicators);
+            document.getElementById('inputPattern').addEventListener('input', updateLengthIndicators);
+            
+            // Search type toggle
+            document.querySelectorAll('input[name="searchType"]').forEach(radio => {
+                radio.addEventListener('change', function() {
+                    const maxErrorsGroup = document.getElementById('maxErrorsGroup');
+                    if (this.value === 'approximate') {
+                        maxErrorsGroup.style.display = 'block';
+                    } else {
+                        maxErrorsGroup.style.display = 'none';
+                    }
+                });
+            });
+            
+            // Max errors slider
+            document.getElementById('maxErrors').addEventListener('input', function() {
+                document.getElementById('maxErrorsValue').textContent = this.value;
+            });
+            
+            // File upload
+            document.getElementById('fileUpload').addEventListener('change', handleFileUpload);
+        }
+        
+        // Update length indicators
+        function updateLengthIndicators() {
+            const text = document.getElementById('inputText').value;
+            const pattern = document.getElementById('inputPattern').value;
+            document.getElementById('textLength').textContent = `${text.length} chars`;
+            document.getElementById('patternLength').textContent = `${pattern.length} chars`;
+        }
+        
+        // Handle file upload
+        async function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const formData = new FormData();
+            formData.append('file', file);
+            
+            try {
+                const response = await fetch('/api/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                if (result.success) {
+                    document.getElementById('inputText').value = result.content;
+                    updateLengthIndicators();
+                    alert(`File loaded: ${result.filename}`);
+                } else {
+                    alert('Error: ' + result.error);
+                }
+            } catch (error) {
+                console.error('Upload error:', error);
+                alert('Failed to upload file');
+            }
+        }
+        
+        // Show algorithm info modal
+        function showAlgoInfo(algoKey) {
+            const algo = algorithmsData[algoKey];
+            document.getElementById('modalAlgoName').textContent = algo.name;
+            
+            const content = `
+                <p><strong>${algo.description}</strong></p>
+                <hr style="border-color: rgba(255,255,255,0.2);">
+                <h6><i class="fas fa-clock"></i> Time Complexity:</h6>
+                <p class="ms-3">${algo.time_complexity}</p>
+                <h6><i class="fas fa-memory"></i> Space Complexity:</h6>
+                <p class="ms-3">${algo.space_complexity}</p>
+                <h6><i class="fas fa-cogs"></i> How it Works:</h6>
+                <ol class="ms-3">
+                    ${algo.how_it_works.map(step => `<li>${step}</li>`).join('')}
+                </ol>
+                <h6><i class="fas fa-check-circle"></i> Best For:</h6>
+                <p class="ms-3">${algo.best_for}</p>
+                <h6><i class="fas fa-exclamation-triangle"></i> Worst Case:</h6>
+                <p class="ms-3">${algo.worst_case}</p>
+            `;
+            
+            document.getElementById('modalAlgoContent').innerHTML = content;
+            new bootstrap.Modal(document.getElementById('algoInfoModal')).show();
+        }
+        
+        // Select/Deselect all algorithms
+        function selectAllAlgos() {
+            document.querySelectorAll('.algo-checkbox input[type="checkbox"]').forEach(cb => {
+                cb.checked = true;
+                cb.parentElement.classList.add('selected');
+            });
+        }
+        
+        function deselectAllAlgos() {
+            document.querySelectorAll('.algo-checkbox input[type="checkbox"]').forEach(cb => {
+                cb.checked = false;
+                cb.parentElement.classList.remove('selected');
+            });
+        }
+        
+        // Perform search
+        async function performSearch() {
+            const text = document.getElementById('inputText').value.trim();
+            const pattern = document.getElementById('inputPattern').value.trim();
+            
+            if (!text || !pattern) {
+                alert('Please enter both text and pattern');
+                return;
+            }
+            
+            const selectedAlgos = Array.from(document.querySelectorAll('.algo-checkbox input:checked')).map(cb => cb.value);
+            
+            if (selectedAlgos.length === 0) {
+                alert('Please select at least one algorithm');
+                return;
+            }
+            
+            const searchType = document.querySelector('input[name="searchType"]:checked').value;
+            const maxErrors = document.getElementById('maxErrors').value;
+            
+            // Show loading
+            document.getElementById('resultsSection').style.display = 'block';
+            document.getElementById('resultsContent').innerHTML = '<div class="text-center"><div class="loading-spinner"></div> Running algorithms...</div>';
+            
+            try {
+                const response = await fetch('/api/search', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        text: text,
+                        pattern: pattern,
+                        algorithms: selectedAlgos,
+                        search_type: searchType,
+                        max_errors: maxErrors
+                    })
+                });
+                
+                const results = await response.json();
+                displayResults(results, text, pattern);
+            } catch (error) {
+                console.error('Search error:', error);
+                document.getElementById('resultsContent').innerHTML = `<div class="alert alert-danger">Error: ${error.message}</div>`;
+            }
+        }
+        
+        // Display results
+        function displayResults(results, text, pattern) {
+            const container = document.getElementById('resultsContent');
+            let html = '';
+            
+            // Sort by execution time
+            const sortedResults = Object.entries(results).sort((a, b) => {
+                return (a[1].execution_time || Infinity) - (b[1].execution_time || Infinity);
+            });
+            
+            sortedResults.forEach(([algoKey, result]) => {
+                if (result.error) {
+                    html += `
+                        <div class="result-card" style="border-left-color: #FF6B6B;">
+                            <div class="result-header">
+                                <div class="result-algo-name">${result.algorithm_name}</div>
+                                <span class="badge bg-danger">Error</span>
+                            </div>
+                            <p class="text-danger">${result.error}</p>
+                        </div>
+                    `;
+                } else {
+                    const matchedText = highlightMatches(text, result.matches, pattern.length);
+                    html += `
+                        <div class="result-card">
+                            <div class="result-header">
+                                <div class="result-algo-name">${result.algorithm_name}</div>
+                                <div>
+                                    <span class="result-time">${result.execution_time_ms.toFixed(3)} ms</span>
+                                    <span class="badge bg-success ms-2">${result.count} matches</span>
+                                </div>
+                            </div>
+                            ${result.count > 0 ? `
+                                <p><strong>Positions:</strong> [${result.matches.slice(0, 20).join(', ')}${result.matches.length > 20 ? '...' : ''}]</p>
+                                <div class="matches-display">${matchedText}</div>
+                            ` : '<p>No matches found</p>'}
+                        </div>
+                    `;
+                }
+            });
+            
+            container.innerHTML = html;
+        }
+        
+        // Highlight matches in text
+        function highlightMatches(text, positions, patternLength) {
+            if (!positions || positions.length === 0) return text;
+            
+            let result = '';
+            let lastPos = 0;
+            
+            // Limit to first 1000 chars for display
+            const displayText = text.substring(0, Math.min(1000, text.length));
+            const displayPositions = positions.filter(p => p < displayText.length);
+            
+            displayPositions.forEach(pos => {
+                result += displayText.substring(lastPos, pos);
+                result += `<span class="match-highlight">${displayText.substring(pos, pos + patternLength)}</span>`;
+                lastPos = pos + patternLength;
+            });
+            result += displayText.substring(lastPos);
+            
+            if (text.length > 1000) {
+                result += '\n... (text truncated)';
+            }
+            
+            return result;
+        }
+        
+        // Clear all inputs
+        function clearAll() {
+            document.getElementById('inputText').value = '';
+            document.getElementById('inputPattern').value = '';
+            document.getElementById('resultsSection').style.display = 'none';
+            updateLengthIndicators();
+        }
+        
+        // Run benchmark
+        async function runBenchmark() {
+            const button = event.target;
+            button.disabled = true;
+            button.innerHTML = '<div class="loading-spinner"></div> Running...';
+            
+            try {
+                const response = await fetch('/api/benchmark', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        text_sizes: [100, 500, 1000, 5000, 10000],
+                        pattern_length: 10
+                    })
+                });
+                
+                const data = await response.json();
+                displayBenchmarkChart(data);
+            } catch (error) {
+                console.error('Benchmark error:', error);
+                alert('Benchmark failed: ' + error.message);
+            } finally {
+                button.disabled = false;
+                button.innerHTML = '<i class="fas fa-play"></i> Run Benchmark';
+            }
+        }
+        
+        // Display benchmark chart
+        function displayBenchmarkChart(data) {
+            const ctx = document.getElementById('benchmarkChart').getContext('2d');
+            
+            const sizes = Object.keys(data).map(Number);
+            const algorithms = Object.keys(data[sizes[0]]);
+            
+            const datasets = algorithms.map((algo, index) => {
+                const color = algorithmsData[algo]?.color || `hsl(${index * 60}, 70%, 50%)`;
+                return {
+                    label: algorithmsData[algo]?.name || algo,
+                    data: sizes.map(size => data[size][algo]?.execution_time_ms || 0),
+                    borderColor: color,
+                    backgroundColor: color + '33',
+                    tension: 0.4
+                };
+            });
+            
+            // Destroy previous chart if it exists
+            try {
+                if (window.benchmarkChart && typeof window.benchmarkChart.destroy === 'function') {
+                    window.benchmarkChart.destroy();
+                }
+            } catch (e) {
+                console.log('No previous chart to destroy');
+            }
+            
+            window.benchmarkChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: sizes.map(s => `${s} chars`),
+                    datasets: datasets
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Algorithm Performance vs Input Size',
+                            color: '#fff',
+                            font: { size: 16 }
+                        },
+                        legend: {
+                            labels: { color: '#fff' }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: { color: '#fff' },
+                            grid: { color: 'rgba(255,255,255,0.1)' }
+                        },
+                        y: {
+                            ticks: { color: '#fff' },
+                            grid: { color: 'rgba(255,255,255,0.1)' },
+                            title: {
+                                display: true,
+                                text: 'Execution Time (ms)',
+                                color: '#fff'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Load education content
+        async function loadEducationContent() {
+            const container = document.getElementById('educationContent');
+            let html = '';
+            
+            for (const [key, algo] of Object.entries(algorithmsData)) {
+                html += `
+                    <div class="glass-card mb-3">
+                        <h4 style="color: ${algo.color};">${algo.name}</h4>
+                        <p class="badge bg-primary">${algo.category}</p>
+                        <p>${algo.description}</p>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>Time:</strong> ${algo.time_complexity}</p>
+                                <p><strong>Space:</strong> ${algo.space_complexity}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Best for:</strong> ${algo.best_for}</p>
+                                <p><strong>Worst case:</strong> ${algo.worst_case}</p>
+                            </div>
+                        </div>
+                        <button class="btn btn-sm btn-outline-light mt-2" onclick="showAlgoInfo('${key}')">
+                            <i class="fas fa-info-circle"></i> Learn More
+                        </button>
+                    </div>
+                `;
+            }
+            
+            container.innerHTML = html;
+        }
+        
+        // ====================================================================
+        // VISUALIZER FUNCTIONS (Features 1-8, 12, 13 for Naive Algorithm)
+        // ====================================================================
+        
+        let vizData = null;
+        let vizCurrentStep = 0;
+        let vizPlaying = false;
+        let vizPlayInterval = null;
+        
+        // Start visualization
+        async function startVisualization() {
+            const algorithm = document.getElementById('vizAlgorithm').value;
+            const text = document.getElementById('vizText').value;
+            const pattern = document.getElementById('vizPattern').value;
+            
+            if (!text || !pattern) {
+                alert('Please enter both text and pattern');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/visualize', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ algorithm, text, pattern })
+                });
+                
+                const data = await response.json();
+                
+                if (data.error) {
+                    alert('Error: ' + data.error);
+                    return;
+                }
+                
+                vizData = data;
+                vizCurrentStep = 0;
+                
+                // Show all visualization panels
+                document.getElementById('vizControls').style.display = 'block';
+                document.getElementById('vizStepInfo').style.display = 'block';
+                document.getElementById('vizTextGrid').style.display = 'block';
+                document.getElementById('vizComparison').style.display = 'block';
+                document.getElementById('vizState').style.display = 'block';
+                document.getElementById('vizMatches').style.display = 'block';
+                document.getElementById('vizSummary').style.display = 'block';
+                
+                // Show algorithm-specific panels
+                if (algorithm === 'rabin_karp') {
+                    document.getElementById('vizHashInfo').style.display = 'block';
+                    document.getElementById('vizKMPInfo').style.display = 'none';
+                    document.getElementById('vizBoyerMooreInfo').style.display = 'none';
+                    document.getElementById('vizSuffixTreeInfo').style.display = 'none';
+                    document.getElementById('vizLevenshteinInfo').style.display = 'none';
+                    document.getElementById('vizShiftOrInfo').style.display = 'none';
+                } else if (algorithm === 'kmp') {
+                    document.getElementById('vizHashInfo').style.display = 'none';
+                    document.getElementById('vizKMPInfo').style.display = 'block';
+                    document.getElementById('vizBoyerMooreInfo').style.display = 'none';
+                    document.getElementById('vizSuffixTreeInfo').style.display = 'none';
+                    document.getElementById('vizLevenshteinInfo').style.display = 'none';
+                    document.getElementById('vizShiftOrInfo').style.display = 'none';
+                } else if (algorithm === 'boyer_moore') {
+                    document.getElementById('vizHashInfo').style.display = 'none';
+                    document.getElementById('vizKMPInfo').style.display = 'none';
+                    document.getElementById('vizBoyerMooreInfo').style.display = 'block';
+                    document.getElementById('vizSuffixTreeInfo').style.display = 'none';
+                    document.getElementById('vizLevenshteinInfo').style.display = 'none';
+                    document.getElementById('vizShiftOrInfo').style.display = 'none';
+                } else if (algorithm === 'suffix_tree') {
+                    document.getElementById('vizHashInfo').style.display = 'none';
+                    document.getElementById('vizKMPInfo').style.display = 'none';
+                    document.getElementById('vizBoyerMooreInfo').style.display = 'none';
+                    document.getElementById('vizSuffixTreeInfo').style.display = 'block';
+                    document.getElementById('vizLevenshteinInfo').style.display = 'none';
+                    document.getElementById('vizShiftOrInfo').style.display = 'none';
+                } else if (algorithm === 'levenshtein') {
+                    document.getElementById('vizHashInfo').style.display = 'none';
+                    document.getElementById('vizKMPInfo').style.display = 'none';
+                    document.getElementById('vizBoyerMooreInfo').style.display = 'none';
+                    document.getElementById('vizSuffixTreeInfo').style.display = 'none';
+                    document.getElementById('vizLevenshteinInfo').style.display = 'block';
+                    document.getElementById('vizShiftOrInfo').style.display = 'none';
+                } else if (algorithm === 'shift_or') {
+                    document.getElementById('vizHashInfo').style.display = 'none';
+                    document.getElementById('vizKMPInfo').style.display = 'none';
+                    document.getElementById('vizBoyerMooreInfo').style.display = 'none';
+                    document.getElementById('vizSuffixTreeInfo').style.display = 'none';
+                    document.getElementById('vizLevenshteinInfo').style.display = 'none';
+                    document.getElementById('vizShiftOrInfo').style.display = 'block';
+                } else {
+                    document.getElementById('vizHashInfo').style.display = 'none';
+                    document.getElementById('vizKMPInfo').style.display = 'none';
+                    document.getElementById('vizBoyerMooreInfo').style.display = 'none';
+                    document.getElementById('vizSuffixTreeInfo').style.display = 'none';
+                    document.getElementById('vizLevenshteinInfo').style.display = 'none';
+                    document.getElementById('vizShiftOrInfo').style.display = 'none';
+                }
+                
+                // Initialize summary
+                displaySummary();
+                
+                // Display first step
+                displayStep(0);
+                
+            } catch (error) {
+                console.error('Visualization error:', error);
+                alert('Error starting visualization: ' + error.message);
+            }
+        }
+        
+        // Display a specific step (Feature 1-8)
+        function displayStep(stepIndex) {
+            if (!vizData || !vizData.steps || stepIndex < 0 || stepIndex >= vizData.steps.length) {
+                return;
+            }
+            
+            vizCurrentStep = stepIndex;
+            const step = vizData.steps[stepIndex];
+            const text = document.getElementById('vizText').value;
+            const pattern = document.getElementById('vizPattern').value;
+            
+            // Update step info (Feature 1)
+            document.getElementById('stepNumber').textContent = step.step_number;
+            document.getElementById('totalSteps').textContent = vizData.steps.length;
+            document.getElementById('stepComparisons').textContent = step.character_comparisons_count || step.comparisons_count || 0;
+            document.getElementById('stepExplanation').textContent = step.explanation;
+            
+            // Display Rabin-Karp specific hash information
+            if (step.step_type === 'preprocessing') {
+                displayPreprocessingStep(step);
+            } else if (step.current_hash !== undefined) {
+                displayRabinKarpHash(step);
+            }
+            
+            // Display KMP specific failure function
+            if (step.failure_function !== undefined) {
+                displayKMPInfo(step);
+            }
+            
+            // Display Boyer-Moore specific bad character table
+            if (step.bad_char_table !== undefined) {
+                displayBoyerMooreInfo(step);
+            }
+            
+            // Display Suffix Tree specific traversal info
+            if (step.path !== undefined || step.suffix !== undefined) {
+                displaySuffixTreeInfo(step);
+            }
+            
+            // Display Levenshtein specific DP matrix
+            if (step.dp_matrix !== undefined) {
+                displayLevenshteinInfo(step);
+            }
+            
+            // Display Shift-Or specific bit vectors
+            if (step.pattern_masks !== undefined || step.old_states !== undefined) {
+                displayShiftOrInfo(step);
+            }
+            
+            // Display text grid with highlighting (Feature 1, 2, 7)
+            displayTextGrid(text, pattern, step);
+            
+            // Display character-by-character comparison (Feature 2)
+            displayComparisons(step.character_comparisons || step.comparisons || []);
+            
+            // Display algorithm state (Feature 3)
+            displayAlgorithmState(step, text.length, pattern.length);
+            
+            // Update button states
+            document.getElementById('btnPrev').disabled = (stepIndex === 0);
+            document.getElementById('btnNext').disabled = (stepIndex === vizData.steps.length - 1);
+        }
+        
+        // Display preprocessing step for Rabin-Karp
+        function displayPreprocessingStep(step) {
+            if (document.getElementById('vizHashInfo').style.display === 'block') {
+                document.getElementById('hashPattern').textContent = step.pattern_hash;
+                document.getElementById('hashCurrent').textContent = '-';
+                document.getElementById('hashMatch').textContent = '-';
+                document.getElementById('hashBase').textContent = step.base;
+                document.getElementById('hashPrime').textContent = step.prime;
+                document.getElementById('hashComparisons').textContent = 0;
+                document.getElementById('hashSpurious').textContent = 0;
+                document.getElementById('hashWindowText').textContent = 'Preprocessing...';
+            }
+        }
+        
+        // Display Rabin-Karp hash information
+        function displayRabinKarpHash(step) {
+            if (document.getElementById('vizHashInfo').style.display === 'block') {
+                document.getElementById('hashPattern').textContent = step.pattern_hash;
+                document.getElementById('hashCurrent').textContent = step.current_hash;
+                document.getElementById('hashMatch').textContent = step.hash_match ? '✅ YES' : '❌ NO';
+                document.getElementById('hashComparisons').textContent = step.hash_comparisons_so_far || 0;
+                
+                // Update spurious hits from summary
+                const spuriousCount = vizData.steps.slice(0, vizCurrentStep + 1)
+                    .filter(s => s.is_spurious_hit).length;
+                document.getElementById('hashSpurious').textContent = spuriousCount;
+                
+                document.getElementById('hashWindowText').textContent = step.window_text || '';
+                
+                // Highlight hash comparison result
+                const hashCurrentElem = document.getElementById('hashCurrent');
+                if (step.hash_match) {
+                    hashCurrentElem.className = 'badge bg-success';
+                } else {
+                    hashCurrentElem.className = 'badge bg-danger';
+                }
+            }
+        }
+        
+        // Display KMP failure function information
+        function displayKMPInfo(step) {
+            if (document.getElementById('vizKMPInfo').style.display === 'block') {
+                const pattern = document.getElementById('vizPattern').value;
+                const failureFunc = step.failure_function;
+                
+                // Display failure function array
+                let failureHTML = '<div style="display: flex; flex-direction: column; gap: 5px;">';
+                
+                // Pattern characters row
+                failureHTML += '<div style="display: flex; gap: 2px;"><div style="width: 80px; font-weight: bold;">Pattern:</div>';
+                for (let i = 0; i < pattern.length; i++) {
+                    failureHTML += `<div class="char-box" style="min-width: 35px; text-align: center; background: rgba(23, 162, 184, 0.2);">${pattern[i]}</div>`;
+                }
+                failureHTML += '</div>';
+                
+                // Index row
+                failureHTML += '<div style="display: flex; gap: 2px;"><div style="width: 80px; font-weight: bold;">Index:</div>';
+                for (let i = 0; i < pattern.length; i++) {
+                    failureHTML += `<div class="char-box" style="min-width: 35px; text-align: center; background: rgba(255, 255, 255, 0.1);">${i}</div>`;
+                }
+                failureHTML += '</div>';
+                
+                // Failure function values row
+                failureHTML += '<div style="display: flex; gap: 2px;"><div style="width: 80px; font-weight: bold;">LPS[i]:</div>';
+                for (let i = 0; i < failureFunc.length; i++) {
+                    let bgColor = 'rgba(40, 167, 69, 0.3)';
+                    if (step.pattern_index !== undefined && i === step.pattern_index) {
+                        bgColor = 'rgba(255, 193, 7, 0.5)'; // Highlight current position
+                    }
+                    failureHTML += `<div class="char-box" style="min-width: 35px; text-align: center; background: ${bgColor}; font-weight: bold;">${failureFunc[i]}</div>`;
+                }
+                failureHTML += '</div>';
+                
+                failureHTML += '</div>';
+                document.getElementById('failureFunctionDisplay').innerHTML = failureHTML;
+                
+                // Update KMP state
+                if (step.step_type === 'search') {
+                    document.getElementById('kmpTextIndex').textContent = step.text_index !== undefined ? step.text_index : 0;
+                    document.getElementById('kmpPatternIndex').textContent = step.new_pattern_index !== undefined ? step.new_pattern_index : 0;
+                    
+                    const backtrackCount = vizData.steps.slice(0, vizCurrentStep + 1)
+                        .filter(s => s.backtracked).length;
+                    document.getElementById('kmpBacktracks').textContent = backtrackCount;
+                    
+                    // Show efficiency
+                    const summary = vizData.summary;
+                    if (summary && summary.efficiency) {
+                        document.getElementById('kmpEfficiency').textContent = summary.efficiency;
+                    }
+                    
+                    // Show backtrack details if this step had a backtrack
+                    if (step.backtracked && step.backtrack_details && step.backtrack_details.length > 0) {
+                        const bt = step.backtrack_details[0];
+                        document.getElementById('kmpBacktrackInfo').style.display = 'block';
+                        document.getElementById('kmpBacktrackDetails').innerHTML = 
+                            `Pattern index moved from <strong>j=${bt.from_j}</strong> to <strong>j=${bt.to_j}</strong> using failure[${bt.from_j - 1}] = ${bt.failure_value}. ${bt.reason}`;
+                    } else {
+                        document.getElementById('kmpBacktrackInfo').style.display = 'none';
+                    }
+                } else {
+                    // Preprocessing step
+                    document.getElementById('kmpTextIndex').textContent = '-';
+                    document.getElementById('kmpPatternIndex').textContent = '-';
+                    document.getElementById('kmpBacktracks').textContent = 0;
+                    document.getElementById('kmpEfficiency').textContent = '100%';
+                    document.getElementById('kmpBacktrackInfo').style.display = 'none';
+                }
+            }
+        }
+        
+        // Display Boyer-Moore bad character table and shift information
+        function displayBoyerMooreInfo(step) {
+            if (document.getElementById('vizBoyerMooreInfo').style.display === 'block') {
+                const badCharTable = step.bad_char_table;
+                
+                // Display bad character table
+                let tableHTML = '<div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center;">';
+                tableHTML += '<strong style="min-width: 100%;">Bad Character Table:</strong>';
+                
+                const entries = Object.entries(badCharTable).sort((a, b) => b[1] - a[1]);
+                entries.forEach(([char, pos]) => {
+                    tableHTML += `
+                        <div style="display: inline-flex; align-items: center; background: rgba(23, 162, 184, 0.2); 
+                                    padding: 5px 10px; border-radius: 5px; border: 1px solid rgba(23, 162, 184, 0.4);">
+                            <strong>'${char}'</strong> → <span style="color: #ffc107; margin-left: 5px;">${pos}</span>
+                        </div>
+                    `;
+                });
+                tableHTML += '</div>';
+                document.getElementById('badCharTableDisplay').innerHTML = tableHTML;
+                
+                // Update Boyer-Moore state
+                if (step.step_type === 'search') {
+                    document.getElementById('bmShift').textContent = step.shift || 0;
+                    document.getElementById('bmShiftReason').textContent = step.shift_reason || '-';
+                    
+                    const totalSkipped = vizData.steps.slice(0, vizCurrentStep + 1)
+                        .reduce((sum, s) => sum + (s.chars_skipped || 0), 0);
+                    document.getElementById('bmSkipped').textContent = totalSkipped;
+                    
+                    // Show skip efficiency
+                    const summary = vizData.summary;
+                    if (summary && summary.skip_efficiency) {
+                        document.getElementById('bmEfficiency').textContent = summary.skip_efficiency;
+                    }
+                } else {
+                    // Preprocessing step
+                    document.getElementById('bmShift').textContent = '-';
+                    document.getElementById('bmShiftReason').textContent = 'Preprocessing - building bad character table';
+                    document.getElementById('bmSkipped').textContent = 0;
+                    document.getElementById('bmEfficiency').textContent = '0%';
+                }
+            }
+        }
+        
+        // Display Suffix Tree traversal information
+        function displaySuffixTreeInfo(step) {
+            if (document.getElementById('vizSuffixTreeInfo').style.display === 'block') {
+                const summary = vizData.summary;
+                
+                // Update tree statistics (from summary)
+                if (summary) {
+                    document.getElementById('stNodes').textContent = summary.tree_nodes || 0;
+                    document.getElementById('stDepth').textContent = summary.tree_depth || 0;
+                    document.getElementById('stSuffixes').textContent = summary.suffixes_indexed || 0;
+                }
+                
+                // Update current step info
+                if (step.step_type === 'search' || step.step_type === 'result') {
+                    document.getElementById('stPath').textContent = step.path || '';
+                    document.getElementById('stVisited').textContent = step.nodes_visited || 0;
+                    document.getElementById('stCurrentDepth').textContent = step.depth_in_tree || 0;
+                    document.getElementById('stMatches').textContent = step.num_matches_so_far || step.matches_found || 0;
+                    
+                    // Show suffix indices if available
+                    if (step.suffix_indices && step.suffix_indices.length > 0) {
+                        document.getElementById('stMatchIndices').style.display = 'block';
+                        const indices = step.suffix_indices.slice(0, 20).join(', ');
+                        const more = step.num_matches_so_far > 20 ? ` ... (${step.num_matches_so_far - 20} more)` : '';
+                        document.getElementById('stIndices').textContent = `[${indices}]${more}`;
+                    } else if (step.match_positions && step.match_positions.length > 0) {
+                        document.getElementById('stMatchIndices').style.display = 'block';
+                        document.getElementById('stIndices').textContent = `[${step.match_positions.join(', ')}]`;
+                    } else {
+                        document.getElementById('stMatchIndices').style.display = 'none';
+                    }
+                } else if (step.step_type === 'preprocessing') {
+                    // Preprocessing step
+                    document.getElementById('stPath').textContent = 'Building tree...';
+                    document.getElementById('stVisited').textContent = 0;
+                    document.getElementById('stCurrentDepth').textContent = '-';
+                    document.getElementById('stMatches').textContent = 0;
+                    document.getElementById('stMatchIndices').style.display = 'none';
+                }
+            }
+        }
+        
+        // Display Levenshtein DP matrix and edit operations
+        function displayLevenshteinInfo(step) {
+            if (document.getElementById('vizLevenshteinInfo').style.display === 'block') {
+                const summary = vizData.summary;
+                
+                // Display DP Matrix
+                if (step.dp_matrix && step.dp_matrix.length > 0) {
+                    const matrix = step.dp_matrix;
+                    const m = matrix.length;
+                    const n = matrix[0].length;
+                    
+                    let matrixHTML = '<table style="border-collapse: collapse; margin: 0 auto;">';
+                    
+                    // Header row with text characters
+                    if (step.substring) {
+                        matrixHTML += '<tr><th style="padding: 4px; border: 1px solid #555;"></th><th style="padding: 4px; border: 1px solid #555;">ε</th>';
+                        for (let j = 0; j < step.substring.length; j++) {
+                            matrixHTML += `<th style="padding: 4px; border: 1px solid #555; background: rgba(23, 162, 184, 0.2);">${step.substring[j]}</th>`;
+                        }
+                        matrixHTML += '</tr>';
+                    }
+                    
+                    // Matrix rows
+                    const pattern = step.pattern || vizData.steps[0].pattern || '';
+                    for (let i = 0; i < m; i++) {
+                        matrixHTML += '<tr>';
+                        
+                        // Row header with pattern character
+                        if (i === 0) {
+                            matrixHTML += '<th style="padding: 4px; border: 1px solid #555;">ε</th>';
+                        } else {
+                            matrixHTML += `<th style="padding: 4px; border: 1px solid #555; background: rgba(255, 193, 7, 0.2);">${pattern[i-1] || ''}</th>`;
+                        }
+                        
+                        // Matrix cells
+                        for (let j = 0; j < n; j++) {
+                            let cellStyle = 'padding: 6px 10px; border: 1px solid #555; text-align: center; font-weight: bold;';
+                            let cellClass = '';
+                            
+                            // Highlight current cell being computed
+                            if (step.dp_row === i && step.dp_col === j) {
+                                cellStyle += ' background: rgba(255, 193, 7, 0.5); color: #000;';
+                            }
+                            // Highlight predecessor cells
+                            else if (step.dp_row && step.dp_col) {
+                                if (i === step.dp_row - 1 && j === step.dp_col - 1) {
+                                    cellStyle += ' background: rgba(40, 167, 69, 0.3);'; // Diagonal
+                                } else if (i === step.dp_row - 1 && j === step.dp_col) {
+                                    cellStyle += ' background: rgba(220, 53, 69, 0.3);'; // Top (delete)
+                                } else if (i === step.dp_row && j === step.dp_col - 1) {
+                                    cellStyle += ' background: rgba(23, 162, 184, 0.3);'; // Left (insert)
+                                }
+                            }
+                            // Color code by value for completed cells
+                            else if (matrix[i][j] === 0) {
+                                cellStyle += ' background: rgba(40, 167, 69, 0.2);';
+                            } else if (matrix[i][j] <= 2) {
+                                cellStyle += ' background: rgba(255, 193, 7, 0.15);';
+                            } else {
+                                cellStyle += ' background: rgba(220, 53, 69, 0.15);';
+                            }
+                            
+                            matrixHTML += `<td style="${cellStyle}">${matrix[i][j]}</td>`;
+                        }
+                        matrixHTML += '</tr>';
+                    }
+                    matrixHTML += '</table>';
+                    
+                    document.getElementById('dpMatrixDisplay').innerHTML = matrixHTML;
+                }
+                
+                // Update Levenshtein state
+                if (step.step_type === 'dp_computation') {
+                    document.getElementById('levCell').textContent = `[${step.dp_row},${step.dp_col}]`;
+                    document.getElementById('levDistance').textContent = step.chosen_cost || 0;
+                    document.getElementById('levOperation').innerHTML = `${step.operation_symbol || ''} ${step.operation || '-'}`;
+                    
+                    if (summary) {
+                        document.getElementById('levCells').textContent = summary.total_cells_computed || 0;
+                    }
+                    
+                    // Show cost calculation details
+                    const costDetails = `
+                        Deletion (↑): DP[${step.dp_row-1}][${step.dp_col}] + 1 = ${step.deletion_cost}<br>
+                        Insertion (←): DP[${step.dp_row}][${step.dp_col-1}] + 1 = ${step.insertion_cost}<br>
+                        ${step.is_match ? 'Match' : 'Substitute'} (↖): DP[${step.dp_row-1}][${step.dp_col-1}] + ${step.is_match ? '0' : '1'} = ${step.substitution_cost}<br>
+                        <strong>Chosen: ${step.chosen_cost} (${step.operation})</strong>
+                    `;
+                    document.getElementById('levCostDetails').innerHTML = costDetails;
+                    document.getElementById('levAlignmentInfo').style.display = 'none';
+                    
+                } else if (step.step_type === 'match_found') {
+                    document.getElementById('levCell').textContent = 'MATCH';
+                    document.getElementById('levDistance').textContent = step.edit_distance || 0;
+                    document.getElementById('levOperation').innerHTML = '✓ Complete';
+                    
+                    if (summary) {
+                        document.getElementById('levCells').textContent = summary.total_cells_computed || 0;
+                    }
+                    
+                    // Show alignment
+                    if (step.alignment) {
+                        document.getElementById('levAlignmentInfo').style.display = 'block';
+                        document.getElementById('levPatternAligned').textContent = step.pattern_aligned || '';
+                        document.getElementById('levTextAligned').textContent = step.text_aligned || '';
+                        
+                        document.getElementById('levCostDetails').innerHTML = `
+                            <strong>Edit Distance: ${step.edit_distance}</strong><br>
+                            Operations: ${step.operations ? step.operations.join(', ') : 'N/A'}
+                        `;
+                    }
+                    
+                } else if (step.step_type === 'preprocessing') {
+                    document.getElementById('levCell').textContent = 'Init';
+                    document.getElementById('levDistance').textContent = 0;
+                    document.getElementById('levOperation').textContent = 'Initializing';
+                    document.getElementById('levCells').textContent = 0;
+                    document.getElementById('levCostDetails').textContent = 'Setting up DP matrix with base cases';
+                    document.getElementById('levAlignmentInfo').style.display = 'none';
+                }
+            }
+        }
+        
+        // Display Shift-Or bit vectors and pattern masks
+        function displayShiftOrInfo(step) {
+            if (document.getElementById('vizShiftOrInfo').style.display === 'block') {
+                const summary = vizData.summary;
+                
+                // Display Pattern Masks
+                if (step.step_type === 'preprocessing' && step.pattern_masks) {
+                    let masksHTML = '<table style="border-collapse: collapse; margin: 0 auto; font-size: 0.9em;">';
+                    masksHTML += '<tr><th style="padding: 6px; border: 1px solid #555;">Character</th><th style="padding: 6px; border: 1px solid #555;">Binary Mask</th><th style="padding: 6px; border: 1px solid #555;">Decimal</th></tr>';
+                    
+                    for (const [char, maskInfo] of Object.entries(step.pattern_masks)) {
+                        masksHTML += `<tr>`;
+                        masksHTML += `<td style="padding: 6px; border: 1px solid #555; text-align: center; background: rgba(23, 162, 184, 0.2);"><strong>'${char}'</strong></td>`;
+                        masksHTML += `<td style="padding: 6px; border: 1px solid #555; font-family: 'JetBrains Mono', monospace; background: rgba(255, 193, 7, 0.1);">${maskInfo.binary}</td>`;
+                        masksHTML += `<td style="padding: 6px; border: 1px solid #555; text-align: center;">${maskInfo.decimal}</td>`;
+                        masksHTML += `</tr>`;
+                    }
+                    masksHTML += '</table>';
+                    
+                    document.getElementById('patternMasksDisplay').innerHTML = masksHTML;
+                    document.getElementById('shiftOrChar').textContent = '-';
+                    document.getElementById('shiftOrInPattern').textContent = '-';
+                    document.getElementById('shiftOrOps').textContent = '0';
+                    document.getElementById('shiftOrMatches').textContent = '0';
+                    document.getElementById('shiftOrOperationDetails').textContent = 'Pattern masks created for bit-parallel matching';
+                    document.getElementById('shiftOrMatchInfo').style.display = 'none';
+                }
+                
+                // Display State Vectors during search
+                if (step.step_type === 'bit_operation') {
+                    // Show pattern masks (compact)
+                    let masksCompact = 'Pattern Masks: ';
+                    if (summary && summary.pattern_masks) {
+                        const maskEntries = Object.entries(summary.pattern_masks).slice(0, 5);
+                        masksCompact += maskEntries.map(([char, info]) => `'${char}'→${info.binary}`).join(', ');
+                        if (Object.keys(summary.pattern_masks).length > 5) {
+                            masksCompact += '...';
+                        }
+                    }
+                    document.getElementById('patternMasksDisplay').innerHTML = `<div style="font-size: 0.85em; padding: 8px;">${masksCompact}</div>`;
+                    
+                    // Display state vectors
+                    let statesHTML = '<table style="border-collapse: collapse; margin: 0 auto; width: 100%;">';
+                    statesHTML += '<tr><th style="padding: 6px; border: 1px solid #555;">Error Level</th><th style="padding: 6px; border: 1px solid #555;">Old State</th><th style="padding: 6px; border: 1px solid #555;">New State</th></tr>';
+                    
+                    for (let k = 0; k < step.old_states.length; k++) {
+                        statesHTML += `<tr>`;
+                        statesHTML += `<td style="padding: 6px; border: 1px solid #555; text-align: center; background: rgba(23, 162, 184, 0.2);"><strong>k=${k}</strong></td>`;
+                        statesHTML += `<td style="padding: 6px; border: 1px solid #555; font-family: 'JetBrains Mono', monospace; background: rgba(255, 193, 7, 0.1);">${step.old_states[k]}</td>`;
+                        statesHTML += `<td style="padding: 6px; border: 1px solid #555; font-family: 'JetBrains Mono', monospace; background: rgba(40, 167, 69, 0.2);">${step.new_states[k]}</td>`;
+                        statesHTML += `</tr>`;
+                    }
+                    statesHTML += '</table>';
+                    
+                    document.getElementById('stateVectorsDisplay').innerHTML = statesHTML;
+                    
+                    // Update shift-or state
+                    document.getElementById('shiftOrChar').textContent = step.text_char || '-';
+                    document.getElementById('shiftOrInPattern').innerHTML = step.char_in_pattern ? 
+                        '<span class="badge bg-success">✓ Yes</span>' : 
+                        '<span class="badge bg-warning">✗ No</span>';
+                    
+                    if (summary) {
+                        document.getElementById('shiftOrOps').textContent = summary.bit_operations || 0;
+                    }
+                    
+                    // Show operation details
+                    const opDetails = `
+                        <strong>Current Character Mask:</strong> ${step.char_mask} (decimal: ${step.char_mask_decimal})<br>
+                        <strong>Operations:</strong> Shift (<<), OR (|), AND (&)<br>
+                        <strong>Match Mask:</strong> ${step.match_mask}<br>
+                        <small>Each state vector is shifted left and OR'd with character mask</small>
+                    `;
+                    document.getElementById('shiftOrOperationDetails').innerHTML = opDetails;
+                    
+                    // Show matches if found
+                    if (step.matches_found && step.matches_found.length > 0) {
+                        document.getElementById('shiftOrMatches').textContent = step.matches_found.length;
+                        document.getElementById('shiftOrMatchInfo').style.display = 'block';
+                        
+                        let matchDetails = step.matches_found.map(m => 
+                            `Position ${m.position} with ${m.errors} error(s)`
+                        ).join('<br>');
+                        document.getElementById('shiftOrMatchDetails').innerHTML = matchDetails;
+                    } else {
+                        document.getElementById('shiftOrMatchInfo').style.display = 'none';
+                        if (summary) {
+                            document.getElementById('shiftOrMatches').textContent = summary.matches_found || 0;
+                        }
+                    }
+                }
+                
+                // Initialization step
+                if (step.step_type === 'initialization') {
+                    let statesHTML = '<table style="border-collapse: collapse; margin: 0 auto;">';
+                    statesHTML += '<tr><th style="padding: 6px; border: 1px solid #555;">Error Level</th><th style="padding: 6px; border: 1px solid #555;">Initial State</th></tr>';
+                    
+                    for (let k = 0; k < step.initial_states.length; k++) {
+                        statesHTML += `<tr>`;
+                        statesHTML += `<td style="padding: 6px; border: 1px solid #555; text-align: center; background: rgba(23, 162, 184, 0.2);"><strong>k=${k}</strong></td>`;
+                        statesHTML += `<td style="padding: 6px; border: 1px solid #555; font-family: 'JetBrains Mono', monospace;">${step.initial_states[k]}</td>`;
+                        statesHTML += `</tr>`;
+                    }
+                    statesHTML += '</table>';
+                    
+                    document.getElementById('stateVectorsDisplay').innerHTML = statesHTML;
+                    document.getElementById('shiftOrOperationDetails').innerHTML = `
+                        <strong>Initialization:</strong> All state vectors set to all 1s<br>
+                        <strong>Match Mask:</strong> ${step.match_mask}<br>
+                        <small>We'll check the most significant bit to detect matches</small>
+                    `;
+                }
+            }
+        }
+        
+        // Feature 1: Text scanning animation with colored highlighting
+        function displayTextGrid(text, pattern, step) {
+            const textDisplay = document.getElementById('textDisplay');
+            const patternDisplay = document.getElementById('patternDisplay');
+            
+            // Handle preprocessing step with algorithm-specific messages
+            if (step.step_type === 'preprocessing') {
+                let message = 'Preprocessing...';
+                if (step.pattern_hash !== undefined) {
+                    message = 'Calculating hash values...';
+                } else if (step.suffix !== undefined || step.suffix_index !== undefined) {
+                    message = `Building suffix tree... (suffix ${step.suffix_index !== undefined ? step.suffix_index : ''}${step.suffix_preview ? ': ' + step.suffix_preview : ''})`;
+                } else if (step.bad_char_table !== undefined) {
+                    message = 'Building bad character table...';
+                } else if (step.failure_function !== undefined) {
+                    message = 'Computing failure function (LPS array)...';
+                } else if (step.dp_matrix !== undefined) {
+                    message = 'Initializing DP matrix...';
+                } else if (step.pattern_masks !== undefined) {
+                    message = 'Creating bit masks for pattern characters...';
+                }
+                textDisplay.innerHTML = `<div class="alert alert-info">${message}</div>`;
+                patternDisplay.innerHTML = '';
+                return;
+            }
+            
+            // Handle Levenshtein DP computation
+            if (step.step_type === 'dp_computation' && step.substring !== undefined) {
+                // Display the current substring being compared
+                let textHTML = '';
+                for (let i = 0; i < text.length; i++) {
+                    let className = 'char-box';
+                    // Highlight the current substring
+                    if (i >= step.text_position && i < step.text_position + step.substring.length) {
+                        const substringIdx = i - step.text_position;
+                        if (substringIdx === step.dp_col - 1) {
+                            className += ' current'; // Current character being processed
+                        } else {
+                            className += ' window'; // Part of current window
+                        }
+                    }
+                    textHTML += `<div class="${className}">${text[i]}</div>`;
+                }
+                textDisplay.innerHTML = textHTML;
+                
+                // Pattern grid with current character highlighted
+                let patternHTML = '';
+                for (let i = 0; i < pattern.length; i++) {
+                    let className = 'char-box';
+                    if (i === step.dp_row - 1) {
+                        className += ' current'; // Current pattern character
+                    }
+                    patternHTML += `<div class="${className}">${pattern[i]}</div>`;
+                }
+                patternDisplay.innerHTML = patternHTML;
+                return;
+            }
+            
+            // Handle Levenshtein match found
+            if (step.step_type === 'match_found' && step.alignment !== undefined) {
+                // Show the aligned pattern and text
+                textDisplay.innerHTML = `<div class="alert alert-success">
+                    <strong>Match found at position ${step.text_position}!</strong><br>
+                    Edit distance: ${step.edit_distance}
+                </div>`;
+                
+                // Show pattern
+                let patternHTML = '';
+                for (let i = 0; i < pattern.length; i++) {
+                    patternHTML += `<div class="char-box match">${pattern[i]}</div>`;
+                }
+                patternDisplay.innerHTML = patternHTML;
+                return;
+            }
+            
+            // Handle Shift-Or bit operations
+            if (step.step_type === 'bit_operation' && step.text_index !== undefined) {
+                // Display text with current character highlighted
+                let textHTML = '';
+                for (let i = 0; i < text.length; i++) {
+                    let className = 'char-box';
+                    if (i === step.text_index) {
+                        className += ' current'; // Current character being processed
+                    } else if (i < step.text_index) {
+                        className += ' checked'; // Already processed
+                    }
+                    textHTML += `<div class="${className}">${text[i]}</div>`;
+                }
+                textDisplay.innerHTML = textHTML;
+                
+                // Pattern display
+                let patternHTML = '';
+                for (let i = 0; i < pattern.length; i++) {
+                    let className = 'char-box';
+                    if (step.char_in_pattern && pattern[i] === step.text_char) {
+                        className += ' match'; // Current char appears in pattern
+                    }
+                    patternHTML += `<div class="${className}">${pattern[i]}</div>`;
+                }
+                patternDisplay.innerHTML = patternHTML;
+                return;
+            }
+            
+            // Handle Shift-Or initialization
+            if (step.step_type === 'initialization') {
+                textDisplay.innerHTML = `<div class="alert alert-info">Initializing state vectors for bit-parallel matching...</div>`;
+                
+                let patternHTML = '';
+                for (let i = 0; i < pattern.length; i++) {
+                    patternHTML += `<div class="char-box">${pattern[i]}</div>`;
+                }
+                patternDisplay.innerHTML = patternHTML;
+                return;
+            }
+            
+            // Handle result step for suffix tree
+            if (step.step_type === 'result') {
+                // Show matches found
+                let resultHTML = `<div class="alert alert-success"><strong>Search complete!</strong> Found ${step.matches_found || 0} match(es).</div>`;
+                textDisplay.innerHTML = resultHTML;
+                
+                // Show pattern
+                let patternHTML = '';
+                for (let i = 0; i < pattern.length; i++) {
+                    patternHTML += `<div class="char-box match">${pattern[i]}</div>`;
+                }
+                patternDisplay.innerHTML = patternHTML;
+                return;
+            }
+            
+            // For suffix tree search steps, show the path being traversed
+            if (step.path !== undefined && step.step_type === 'search') {
+                // Display text with the current character highlighted
+                let textHTML = '';
+                for (let i = 0; i < text.length; i++) {
+                    let className = 'char-box';
+                    textHTML += `<div class="${className}">${text[i]}</div>`;
+                }
+                textDisplay.innerHTML = textHTML;
+                
+                // Display pattern with current position highlighted
+                let patternHTML = '';
+                for (let i = 0; i < pattern.length; i++) {
+                    let className = 'char-box';
+                    if (i < step.path.length) {
+                        className += ' match'; // Already matched
+                    } else if (i === step.char_index) {
+                        className += ' window'; // Currently checking
+                    }
+                    patternHTML += `<div class="${className}">${pattern[i]}</div>`;
+                }
+                patternDisplay.innerHTML = patternHTML;
+                return;
+            }
+            
+            // Text grid
+            let textHTML = '';
+            for (let i = 0; i < text.length; i++) {
+                let className = 'char-box';
+                
+                // Check if this character is in current window
+                if (step.window_start !== undefined && step.window_end !== undefined) {
+                    if (i >= step.window_start && i < step.window_end) {
+                        className += ' window';
+                    }
+                }
+                
+                // Check if this character was compared (handle both formats)
+                const comparisons = step.character_comparisons || step.comparisons || [];
+                const comparison = comparisons.find(c => c.text_index === i);
+                if (comparison) {
+                    if (comparison.is_match) {
+                        className += ' match';
+                    } else {
+                        className += ' mismatch';
+                    }
+                }
+                
+                // Highlight completed matches
+                if (step.is_match && step.window_start !== undefined && step.window_end !== undefined) {
+                    if (i >= step.window_start && i < step.window_end) {
+                        className += ' found-match';
+                    }
+                }
+                
+                // Highlight spurious hits in orange
+                if (step.is_spurious_hit && step.window_start !== undefined && step.window_end !== undefined) {
+                    if (i >= step.window_start && i < step.window_end) {
+                        className += ' spurious-hit';
+                    }
+                }
+                
+                textHTML += `<div class="${className}">${text[i]}</div>`;
+            }
+            textDisplay.innerHTML = textHTML;
+            
+            // Pattern grid with offset
+            let patternHTML = '';
+            const textPos = step.text_position !== undefined ? step.text_position : 0;
+            
+            // Add spacers for alignment
+            for (let i = 0; i < textPos; i++) {
+                patternHTML += `<div class="char-box" style="opacity: 0.3; border-style: dashed;">·</div>`;
+            }
+            // Add pattern characters
+            for (let i = 0; i < pattern.length; i++) {
+                let className = 'char-box';
+                const comparisons = step.character_comparisons || step.comparisons || [];
+                const comparison = comparisons.find(c => c.pattern_index === i);
+                if (comparison) {
+                    if (comparison.is_match) {
+                        className += ' match';
+                    } else {
+                        className += ' mismatch';
+                    }
+                }
+                patternHTML += `<div class="${className}">${pattern[i]}</div>`;
+            }
+            patternDisplay.innerHTML = patternHTML;
+        }
+        
+        // Feature 2: Character-by-character comparison display
+        function displayComparisons(comparisons) {
+            const container = document.getElementById('comparisonDetails');
+            
+            if (!comparisons || comparisons.length === 0) {
+                // Check if this is a Levenshtein DP computation step
+                const currentStep = vizData.steps[vizCurrentStep];
+                
+                if (currentStep && currentStep.step_type === 'dp_computation' && currentStep.dp_matrix !== undefined) {
+                    const patternChar = currentStep.pattern_char || '-';
+                    const textChar = currentStep.text_char || '-';
+                    const isMatch = currentStep.is_match || false;
+                    
+                    container.innerHTML = `<div class="alert alert-${isMatch ? 'success' : 'warning'}">
+                        <strong>DP Cell [${currentStep.dp_row},${currentStep.dp_col}]:</strong><br>
+                        Pattern[${currentStep.dp_row - 1}] = '<span style="font-family: monospace; font-weight: bold;">${patternChar}</span>' 
+                        ${isMatch ? '==' : '!='} 
+                        Text[${currentStep.dp_col - 1}] = '<span style="font-family: monospace; font-weight: bold;">${textChar}</span>'<br>
+                        <small>Operation: ${currentStep.operation_symbol || ''} ${currentStep.operation || '-'} (Cost: ${currentStep.chosen_cost || 0})</small>
+                    </div>`;
+                    return;
+                }
+                
+                // Check if this is a Shift-Or bit operation step
+                if (currentStep && currentStep.step_type === 'bit_operation') {
+                    const char = currentStep.text_char || '-';
+                    const inPattern = currentStep.char_in_pattern;
+                    const hasMatches = currentStep.matches_found && currentStep.matches_found.length > 0;
+                    
+                    let message = `<strong>Bit-Parallel Operation:</strong><br>`;
+                    message += `Processing Text[${currentStep.text_index}] = '<span style="font-family: monospace; font-weight: bold;">${char}</span>'<br>`;
+                    message += `Character ${inPattern ? '✓ found' : '✗ not found'} in pattern<br>`;
+                    message += `<small>State vectors shifted and updated using bitwise operations</small>`;
+                    
+                    if (hasMatches) {
+                        message += `<br><strong class="text-success">✓ Match(es) detected!</strong>`;
+                    }
+                    
+                    container.innerHTML = `<div class="alert alert-${hasMatches ? 'success' : 'info'}">${message}</div>`;
+                    return;
+                }
+                
+                // Check if this is a Shift-Or initialization or preprocessing
+                if (currentStep && (currentStep.step_type === 'initialization' || 
+                    (currentStep.step_type === 'preprocessing' && currentStep.pattern_masks))) {
+                    container.innerHTML = '<div class="alert alert-info">Bit-parallel algorithm: No character comparisons, using bitwise operations instead</div>';
+                    return;
+                }
+                
+                // Check if this is a suffix tree step
+                if (currentStep && currentStep.path !== undefined) {
+                    if (currentStep.step_type === 'preprocessing') {
+                        container.innerHTML = '<div class="alert alert-info">Building suffix tree structure...</div>';
+                    } else if (currentStep.step_type === 'search') {
+                        const pathDisplay = currentStep.path || '';
+                        container.innerHTML = `<div class="alert alert-success">
+                            <strong>Tree Traversal:</strong> Following path "<span style="font-family: monospace; font-weight: bold;">${pathDisplay}</span>" in suffix tree.<br>
+                            <small>Character "${currentStep.current_char}" ${currentStep.char_found ? '✓ found' : '✗ not found'} at depth ${currentStep.depth_in_tree || 0}</small>
+                        </div>`;
+                    } else if (currentStep.step_type === 'result') {
+                        container.innerHTML = `<div class="alert alert-success">
+                            <strong>Search Complete!</strong> Pattern found in suffix tree.<br>
+                            Path: "<span style="font-family: monospace; font-weight: bold;">${currentStep.path}</span>"
+                        </div>`;
+                    } else {
+                        container.innerHTML = '<div class="alert alert-info">No character comparisons for suffix tree traversal</div>';
+                    }
+                } else {
+                    container.innerHTML = '<div class="alert alert-info">No character comparisons yet (hash mismatch or preprocessing step)</div>';
+                }
+                return;
+            }
+            
+            let html = '';
+            
+            comparisons.forEach((comp, idx) => {
+                const rowClass = comp.is_match ? 'match-row' : 'mismatch-row';
+                const icon = comp.is_match ? '<i class="fas fa-check text-success"></i>' : '<i class="fas fa-times text-danger"></i>';
+                const result = comp.is_match ? 'MATCH' : 'MISMATCH';
+                
+                html += `
+                    <div class="comparison-row ${rowClass}">
+                        <div style="flex: 1;">
+                            <strong>Comparison ${idx + 1}:</strong> 
+                            Text[${comp.text_index}] = '<span style="color: #ffc107; font-weight: bold;">${comp.text_char}</span>' 
+                            ${comp.is_match ? '==' : '!='} 
+                            Pattern[${comp.pattern_index}] = '<span style="color: #17a2b8; font-weight: bold;">${comp.pattern_char}</span>'
+                        </div>
+                        <div style="min-width: 100px; text-align: right;">
+                            ${icon} <strong>${result}</strong>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+        
+        // Feature 3: Algorithm state variables
+        function displayAlgorithmState(step, textLen, patternLen) {
+            // For suffix tree, show different state
+            if (step.path !== undefined) {
+                // Suffix tree - show path traversal state
+                document.getElementById('stateI').textContent = step.char_index !== undefined ? step.char_index : '-';
+                document.getElementById('stateJ').textContent = step.depth_in_tree || step.path.length || 0;
+                document.getElementById('stateM').textContent = patternLen;
+                document.getElementById('stateN').textContent = textLen;
+                document.getElementById('stateWindow').textContent = '-';
+                document.getElementById('stateWindowEnd').textContent = '-';
+                document.getElementById('stateTotalComparisons').textContent = step.nodes_visited || 0;
+            } else {
+                // Standard algorithms
+                document.getElementById('stateI').textContent = step.text_position !== undefined ? step.text_position : (step.text_index !== undefined ? step.text_index : 0);
+                
+                // Handle both comparisons and character_comparisons
+                const comparisons = step.character_comparisons || step.comparisons || [];
+                let jValue = 0;
+                if (step.pattern_index !== undefined) {
+                    jValue = step.pattern_index;
+                } else if (step.new_pattern_index !== undefined) {
+                    jValue = step.new_pattern_index;
+                } else if (comparisons.length > 0) {
+                    jValue = comparisons[comparisons.length - 1].pattern_index;
+                }
+                document.getElementById('stateJ').textContent = jValue;
+                
+                document.getElementById('stateM').textContent = patternLen;
+                document.getElementById('stateN').textContent = textLen;
+                document.getElementById('stateWindow').textContent = step.window_start !== undefined ? step.window_start : 0;
+                document.getElementById('stateWindowEnd').textContent = step.window_end !== undefined ? step.window_end : 0;
+                document.getElementById('stateTotalComparisons').textContent = step.total_comparisons_so_far || 0;
+            }
+        }
+        
+        // Feature 13: Statistics dashboard
+        function displaySummary() {
+            const summary = vizData.summary;
+            
+            document.getElementById('summaryAlgo').textContent = summary.algorithm;
+            document.getElementById('summaryTextLen').textContent = summary.text_length;
+            document.getElementById('summaryPatternLen').textContent = summary.pattern_length;
+            document.getElementById('summaryMatchesFound').textContent = summary.matches_found;
+            document.getElementById('summaryTotalComp').textContent = summary.total_comparisons || 0;
+            document.getElementById('summaryPositions').textContent = summary.positions_checked || summary.text_positions_checked || summary.text_length || 0;
+            document.getElementById('summaryTimeComp').textContent = summary.time_complexity;
+            document.getElementById('summarySpaceComp').textContent = summary.space_complexity;
+            document.getElementById('summaryAvgComp').textContent = summary.average_comparisons_per_position !== undefined ? 
+                summary.average_comparisons_per_position.toFixed(2) : 'N/A';
+            document.getElementById('summaryWorstCase').textContent = summary.worst_case_comparisons || summary.worst_case || 'N/A';
+            document.getElementById('summaryMatchPos').textContent = 
+                summary.match_positions && summary.match_positions.length > 0 ? summary.match_positions.join(', ') : 'None';
+            
+            // Display Rabin-Karp specific stats
+            if (summary.hash_comparisons !== undefined) {
+                const rabinKarpStats = `
+                    <div class="alert alert-info mt-3">
+                        <strong><i class="fas fa-hashtag"></i> Rabin-Karp Specific Stats:</strong><br>
+                        • Pattern Hash: <strong>${summary.pattern_hash}</strong><br>
+                        • Hash Comparisons: <strong>${summary.hash_comparisons}</strong><br>
+                        • Character Comparisons: <strong>${summary.character_comparisons}</strong><br>
+                        • Spurious Hits (Hash Collisions): <strong class="text-warning">${summary.spurious_hits}</strong><br>
+                        • Hash Efficiency: <strong>${summary.hash_efficiency}</strong><br>
+                        • Base: ${summary.base}, Prime: ${summary.prime}
+                    </div>
+                `;
+                document.getElementById('summaryMatchPos').insertAdjacentHTML('afterend', rabinKarpStats);
+            }
+            
+            // Display KMP specific stats
+            if (summary.failure_function !== undefined) {
+                const kmpStats = `
+                    <div class="alert alert-info mt-3">
+                        <strong><i class="fas fa-table"></i> KMP Specific Stats:</strong><br>
+                        • Failure Function (LPS): <strong>[${summary.failure_function.join(', ')}]</strong><br>
+                        • Backtrack Events: <strong class="text-warning">${summary.backtrack_count}</strong><br>
+                        • Successful Comparisons: <strong class="text-success">${summary.successful_comparisons}</strong><br>
+                        • Failed Comparisons: <strong class="text-danger">${summary.failed_comparisons}</strong><br>
+                        • Search Efficiency: <strong>${summary.efficiency}</strong><br>
+                        • No text backtracking - pattern index uses failure function intelligently!
+                    </div>
+                `;
+                document.getElementById('summaryMatchPos').insertAdjacentHTML('afterend', kmpStats);
+            }
+            
+            // Display Boyer-Moore specific stats
+            if (summary.bad_char_table !== undefined) {
+                const badCharEntries = Object.entries(summary.bad_char_table)
+                    .map(([char, pos]) => `'${char}':${pos}`)
+                    .join(', ');
+                const bmStats = `
+                    <div class="alert alert-info mt-3">
+                        <strong><i class="fas fa-arrow-right"></i> Boyer-Moore Specific Stats:</strong><br>
+                        • Bad Character Table: <strong>{${badCharEntries}}</strong><br>
+                        • Scan Direction: <strong class="text-warning">← Right-to-Left</strong><br>
+                        • Total Shifts: <strong>${summary.total_shifts}</strong><br>
+                        • Characters Skipped: <strong class="text-success">${summary.characters_skipped}</strong><br>
+                        • Alignments Checked: <strong>${summary.alignments_checked}</strong><br>
+                        • Skip Efficiency: <strong>${summary.skip_efficiency}</strong><br>
+                        • Successful Comparisons: <strong class="text-success">${summary.successful_comparisons}</strong><br>
+                        • Failed Comparisons: <strong class="text-danger">${summary.failed_comparisons}</strong><br>
+                        • Best case skips large portions of text!
+                    </div>
+                `;
+                document.getElementById('summaryMatchPos').insertAdjacentHTML('afterend', bmStats);
+            }
+            
+            // Display Suffix Tree specific stats
+            if (summary.tree_nodes !== undefined) {
+                const stStats = `
+                    <div class="alert alert-info mt-3">
+                        <strong><i class="fas fa-project-diagram"></i> Suffix Tree Specific Stats:</strong><br>
+                        • Tree Nodes Created: <strong>${summary.tree_nodes}</strong><br>
+                        • Tree Depth: <strong>${summary.tree_depth}</strong><br>
+                        • Suffixes Indexed: <strong>${summary.suffixes_indexed}</strong><br>
+                        • Nodes Visited in Search: <strong class="text-success">${summary.nodes_visited}</strong><br>
+                        • Comparisons Needed: <strong>${summary.comparisons_needed || summary.pattern_length}</strong> (only m chars!)<br>
+                        • Preprocessing Time: <strong>${summary.preprocessing_time}</strong><br>
+                        • Search Time: <strong>${summary.search_time}</strong><br>
+                        • <strong class="text-warning">Advantage:</strong> ${summary.advantage}
+                    </div>
+                `;
+                document.getElementById('summaryMatchPos').insertAdjacentHTML('afterend', stStats);
+            }
+            
+            // Display Levenshtein Distance specific stats
+            if (summary.total_cells_computed !== undefined) {
+                let matchDetailsHTML = '';
+                if (summary.match_details && summary.match_details.length > 0) {
+                    matchDetailsHTML = '<br>• <strong>Match Details:</strong><br>';
+                    summary.match_details.forEach((match, idx) => {
+                        matchDetailsHTML += `  ${idx + 1}. Position ${match.position}: Distance = <strong class="${match.edit_distance === 0 ? 'text-success' : 'text-warning'}">${match.edit_distance}</strong>`;
+                        if (match.operations) {
+                            matchDetailsHTML += ` [${match.operations.join(', ')}]`;
+                        }
+                        matchDetailsHTML += '<br>';
+                    });
+                }
+                
+                const levStats = `
+                    <div class="alert alert-info mt-3">
+                        <strong><i class="fas fa-table-cells"></i> Levenshtein Distance Specific Stats:</strong><br>
+                        • Total DP Cells Computed: <strong class="text-primary">${summary.total_cells_computed}</strong><br>
+                        • Edit Distance Threshold: <strong>${summary.max_distance}</strong><br>
+                        • DP Matrix Size: <strong>${summary.pattern_length + 1} × variable</strong><br>
+                        • Algorithm Type: <strong class="text-info">Dynamic Programming (Fuzzy Match)</strong><br>
+                        • Operations Used: <strong>Match, Substitute, Insert, Delete</strong>${matchDetailsHTML}
+                        • <strong class="text-warning">Note:</strong> Allows approximate matching within edit distance threshold!
+                    </div>
+                `;
+                document.getElementById('summaryMatchPos').insertAdjacentHTML('afterend', levStats);
+            }
+            
+            // Display Shift-Or Algorithm specific stats
+            if (summary.pattern_masks !== undefined && summary.bit_operations !== undefined) {
+                let matchDetailsHTML = '';
+                if (summary.match_details && summary.match_details.length > 0) {
+                    matchDetailsHTML = '<br>• <strong>Match Details:</strong><br>';
+                    summary.match_details.forEach((match, idx) => {
+                        matchDetailsHTML += `  ${idx + 1}. Position ${match.position}: <strong class="${match.errors === 0 ? 'text-success' : 'text-warning'}">${match.errors} error(s)</strong><br>`;
+                    });
+                }
+                
+                const maskCount = Object.keys(summary.pattern_masks).length;
+                
+                const shiftOrStats = `
+                    <div class="alert alert-info mt-3">
+                        <strong><i class="fas fa-microchip"></i> Shift-Or Algorithm Specific Stats:</strong><br>
+                        • Total Bit Operations: <strong class="text-primary">${summary.bit_operations}</strong><br>
+                        • Shift Operations: <strong>${summary.total_shifts}</strong><br>
+                        • OR Operations: <strong>${summary.total_or_operations}</strong><br>
+                        • Pattern Masks Created: <strong>${maskCount} characters</strong><br>
+                        • Max Error Level: <strong>${summary.max_errors}</strong><br>
+                        • Algorithm Type: <strong class="text-info">Bit-Parallel (Approximate Match)</strong><br>
+                        • Word Size Limit: <strong>${summary.word_size} bits</strong>${matchDetailsHTML}
+                        • <strong class="text-warning">Advantage:</strong> Uses bitwise operations for parallel character matching!
+                    </div>
+                `;
+                document.getElementById('summaryMatchPos').insertAdjacentHTML('afterend', shiftOrStats);
+            }
+            
+            // Display matches list (Feature 7)
+            const matchesList = document.getElementById('matchesList');
+            if (summary.matches_found > 0) {
+                let html = '<div class="row">';
+                summary.match_positions.forEach((pos, idx) => {
+                    html += `
+                        <div class="col-md-6 mb-2">
+                            <div class="alert alert-success mb-0">
+                                <strong>Match ${idx + 1}:</strong> Position ${pos}
+                            </div>
+                        </div>
+                    `;
+                });
+                html += '</div>';
+                matchesList.innerHTML = html;
+            } else {
+                matchesList.innerHTML = '<div class="alert alert-warning">No matches found</div>';
+            }
+        }
+        
+        // Control functions
+        function vizNextStep() {
+            if (vizCurrentStep < vizData.steps.length - 1) {
+                displayStep(vizCurrentStep + 1);
+            }
+        }
+        
+        function vizPrevStep() {
+            if (vizCurrentStep > 0) {
+                displayStep(vizCurrentStep - 1);
+            }
+        }
+        
+        function vizPlayPause() {
+            vizPlaying = !vizPlaying;
+            const btn = document.getElementById('btnPlayPause');
+            
+            if (vizPlaying) {
+                btn.innerHTML = '<i class="fas fa-pause"></i> Pause';
+                btn.classList.remove('btn-primary-custom');
+                btn.classList.add('btn-warning');
+                
+                const speed = parseInt(document.getElementById('vizSpeed').value);
+                vizPlayInterval = setInterval(() => {
+                    if (vizCurrentStep < vizData.steps.length - 1) {
+                        vizNextStep();
+                    } else {
+                        vizPlayPause(); // Stop at end
+                    }
+                }, speed);
+            } else {
+                btn.innerHTML = '<i class="fas fa-play"></i> Play';
+                btn.classList.remove('btn-warning');
+                btn.classList.add('btn-primary-custom');
+                
+                if (vizPlayInterval) {
+                    clearInterval(vizPlayInterval);
+                    vizPlayInterval = null;
+                }
+            }
+        }
+        
+        function vizReset() {
+            if (vizPlaying) {
+                vizPlayPause();
+            }
+            displayStep(0);
+        }
+    </script>
+</body>
+</html>
